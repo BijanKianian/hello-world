@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+//#include <string.h>
 void reverse_array (char*, int);
 
 int main()
 {
     int size,length,sizeofelement;
-    char src[] = "Bijan";
+    char src[] = "University of Colorado Boulder";
 
     size = sizeof(src);
     sizeofelement=sizeof(src[0]);                       // Size of array in bytes=
-    length = (size/sizeofelement) - 1;          // Number of elements minus '/0'
-
+    length = (size/sizeofelement) - 1;          // Number of elements minus '\0'
+    //length = strlen(src);
     reverse_array (src, length);
 
 
@@ -30,13 +31,15 @@ void reverse_array(char* str, int length)
 
 {
         int i;
-        char *temp, reverse[length-1];
+        char *temp, reverse[length];
         temp = str + length - 1;
+
+        reverse [length]= '\0';
        for(i = 0; i < length; i++)
        {
          reverse[i] = *temp;
          temp--;
     }
-printf("\nreversed %s",reverse);
+    printf("\nreversed %s",reverse);
 
 }
