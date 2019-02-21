@@ -14,8 +14,8 @@
 * response via functions
 *
 * @author Ismail Yesildirek & Bijan Kianian
-* @date February 17 2019
-* @version 1.1
+* @date February 21 2019
+* @version 1.2
 *
 */
 
@@ -27,5 +27,7 @@
 
 void help(void);
 int inputCheck(void);
+int* allocate(int);
+void free_memory(int*);
 
-/* End prototy list */
+/* End prototype list */
