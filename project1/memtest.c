@@ -20,6 +20,9 @@
 
 #include "memtest.h"
 
+    int memoryOffsetValue = 0;    /* Offset value for the memory block to be allocated*/
+    int* Block_Address = NULL;    /* Place holder for block address*/
+
 int main()
 {
 	printf("This is a simple program for testing memory.\n");
@@ -40,85 +43,83 @@ int inputCheck(void)
 	char *cmds[] = { "help", "exit", "allocate", "free" }; /* Constant strings to be compared with user input commands */
     char *Token[10];           /* Array of strings for saving tokens in command line after parsing user input line*/
 	char userInput[50];        /* Array to store input command line string */
-    int memoryOffsetValue ;    /* Offset value for the memory block to be allocated*/
-    int* ptr = NULL;           /* Pointer returned from allocate() */
-    int* Block_Address;        /* Place holder for block address*/
 
-        /***** Parsing variables ******/
-   char *pToken;            /* Token pointer to be used in parsing command line input string*/
-   int tokenCount;          /* Counter used in parsing procedure*/
-   char **str[10];          /* Array of strings pointed to by the token*/
-        /*******************************/
+                /***** Parsing variables ******/
+           char *pToken;            /* Token pointer to be used in parsing command line input string*/
+           int tokenCount;          /* Counter used in parsing procedure*/
+           char **str[10];          /* Array of strings pointed to by the token*/
+                /*******************************/
 
-     fflush(stdin);         /*Flushing keyboard buffer*/
-     strcpy(userInput," ");
-	 scanf("%[^\n]%*c", userInput);  /* Accepting user command line string by eliminating '\n' */
+             fflush(stdin);         /*Flushing keyboard buffer*/
+             strcpy(userInput," ");
+             scanf("%[^\n]%*c", userInput);  /* Accepting user command line string by eliminating '\n' */
 
- /**************************************** Parsing Start *************************************************/
-    tokenCount = 0;
-       pToken = strtok (userInput," ");
-       str[0] = &pToken;
+         /**************************************** Parsing Start *************************************************/
+            tokenCount = 0;
+               pToken = strtok (userInput," ");
+               str[0] = &pToken;
 
-	     while (pToken)
-	       {
-             Token[tokenCount] = *str[tokenCount];    /* Saving the parsed texts into *str[] array*/
-             pToken = strtok (NULL, " ");
+                 while (pToken)
+                   {
+                     Token[tokenCount] = *str[tokenCount];    /* Saving the parsed texts into *str[] array*/
+                     pToken = strtok (NULL, " ");
 
-             tokenCount++;
-             str[tokenCount] = &pToken;
-	       }
-/****************************************** Parsing End **************************************************/
+                     tokenCount++;
+                     str[tokenCount] = &pToken;
+                   }
+        /****************************************** Parsing End **************************************************/
 
-	int valid = 0;
-		if (strcmp(Token[0], cmds[0]) == 0)             /*     help()     */
-		{
-			valid = 0;
-			help();
-		}
-		else if (strcmp(Token[0], cmds[1]) == 0)        /*     exit()      */
-		{
-			valid = 1;
-			printf("\nGood Bye!\n\n");
-		}
+            int valid = 0;
 
-		else if (strcmp(Token[0], cmds[2]) == 0)       /*     allocate()    */
-		{
-			valid = 0;
-            memoryOffsetValue = atoi(Token[1]);
-			ptr = allocate(memoryOffsetValue);
-			Block_Address = ptr;       /* Local variable for address pointer */
-			if (Block_Address)
+                if (strcmp(Token[0], cmds[0]) == 0)             /*     help()     */
                 {
-                  printf("\nMemory block allocated.\n");
-                  printf("Address: %p    size: %d   (%d Bytes1)\n", Block_Address, \
-                          memoryOffsetValue, 4 * memoryOffsetValue);
+                    valid = 0;
+                    help();
+                }
+                else if (strcmp(Token[0], cmds[1]) == 0)        /*     exit()      */
+                {
+                    valid = 1;
+                    printf("\nGood Bye!\n\n");
                 }
 
-		}
+                else if (strcmp(Token[0], cmds[2]) == 0)       /*     allocate()    */
+                {
+                    valid = 0;
+                    memoryOffsetValue = atoi(Token[1]);
+                    Block_Address = allocate(memoryOffsetValue);
 
-		else if (strcmp(Token[0], cmds[3]) == 0)        /*    free()    */
-		{
-			valid = 0;
+                    if (Block_Address)
+                        {
+                          printf("\nMemory block allocated.\n");
+                          printf("Address: %p    size: %d   (%d Bytes1)\n", Block_Address, \
+                                  memoryOffsetValue, 4 * memoryOffsetValue);
+                        }
 
-			if(!Block_Address)
-                puts("Memory is not allocated yet!");
+                }
 
-            else
-            {
-                free_memory(Block_Address);
-			    printf(" %d Bytes of heap released from address %p to %p\n", 4 * memoryOffsetValue,Block_Address, Block_Address + memoryOffsetValue);
+                else if (strcmp(Token[0], cmds[3]) == 0)        /*    free()    */
+                {
+                    valid = 0;
 
-			}
-		}
+                    if(!Block_Address)
+                        printf("Memory is not allocated yet!");
 
-		else
-		{
-			valid = 0;
-			printf("Invalid input, please try again: \n");
+                    else
+                    {
+                        free_memory(Block_Address);
+                        printf(" %d Bytes of heap released from address %p to %p\n", 4 * memoryOffsetValue,Block_Address, Block_Address + memoryOffsetValue);
 
-		}
+                    }
+                }
 
-	return valid;
+                else
+                {
+                    valid = 0;
+                    printf("Invalid input, please try again: \n");
+
+                }
+        return valid;
+
 }
 /*###################################### inputCheck () End #############################################*/
 
