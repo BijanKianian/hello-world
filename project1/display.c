@@ -13,8 +13,8 @@
 * @brief This source file contains a c program to manipulate and test memory.
 *
 * @author Ismail Yesildirek & Bijan Kianian
-* @date February 21 2019
-* @version 1.2
+* @date February 23 2019
+* @version 1.3
 *
 */
 
@@ -23,13 +23,14 @@
 void display(int* address, int offset)
 {
 
-    printf(" Address            Value ");
-    printf(" --------          -------");
+    printf("\n   Address            Value \n");
+    printf("  ------------          -------\n");
 
-    for(int i = 0 ; i <= address + offset ; i++)
+    for(int i = 0 ; i < offset ; i++)
     {
-        printf("%p              %d" , address + i, *(address + i));
+        printf(" %p              %d\n" , address + i, *(address + i));
     }
 
+    printf("\n");
     return;
 }
