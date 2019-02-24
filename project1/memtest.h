@@ -30,5 +30,6 @@ int inputCheck(void);
 int* allocate(int);
 void free_memory(int*);
 void display(int*, int);
+void write(int*, int, int);
 
 /* End prototype list */

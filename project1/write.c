@@ -20,17 +20,9 @@
 
 #include "memtest.h"
 
-void display(int* address, int offset)
+void write(int* address, int offset, int value)
 {
-
-    printf("\n   Address                 Value \n");
-    printf("  ------------            -------\n");
-
-    for(int i = 0 ; i < offset ; i++)
-    {
-        printf(" %p              %d\n" , address + i, *(address + i));
-    }
-
-    printf("\n");
+    *(address + offset) = value;
+    printf(" Value: %d written at address: %p\n\n", value, address + offset);
     return;
 }

@@ -40,10 +40,12 @@ int main()
 /*########################################## inputCheck() Start #######################################################*/
 int inputCheck(void)
 {
-    char *cmds[] = { "help", "exit", "allocate", "free", "display"};         /* Constant strings to be compared with user input commands */
-    char *Token[10];               /* Array of strings for saving tokens in command line after parsing user input line*/
-    char userInput[50], temp;            /* Array to store input command line string */
-
+    char *cmds[] = { "help", "exit", "allocate", "free", "display", "write"};         /* Constant strings to be compared with user input commands */
+    char *Token[10] = {};               /* Array of strings for saving tokens in command line after parsing user input line*/
+    char userInput[50] = {}, temp;      /* Array to store input command line string */
+    int memoryValue;                    /* Value to be written at memory locaion defined by write()*/
+    int location =0;                       /* Memory location offset from start of the block */
+    int compareResult;
         /***** Parsing variables ******/
      char *pToken;                 /* Token pointer to be used in parsing command line input string*/
      int tokenCount;               /* Counter used in parsing procedure*/
@@ -52,8 +54,18 @@ int inputCheck(void)
 
      fflush(stdin);                 /* Flushing keyboard buffer from previous input*/
      strcpy(userInput," ");         /* Reseting userInput string array*/
+
      scanf("%[^\n]", userInput);	/* Accepting user Input*/
      scanf("%c", &temp);            /* Flushing '\n' character from the stdin buffer after user hit the 'Enter' */
+     compareResult = strcmp(userInput,"");
+     while(compareResult == 32)      /* Validating user input, No input = 'SPACE' (i.e decimal value 32)*/
+      {
+        int value = 0;
+        printf("Please enter a valid command, or <help> for details\n\n");
+        return value;
+      }
+
+
 
 /**************************************** Parsing Start *************************************************/
     tokenCount = 0;
@@ -85,6 +97,13 @@ int inputCheck(void)
 		else if (strcmp(Token[0], cmds[2]) == 0)        /*     allocate()    */
 			{
 			   valid = 0;
+
+		       if (Token[1]==0)             /* No offset enterred*/
+                    {
+                         printf("Please enter a valid offset value, or <help> for details\n");
+                         return valid;
+                    }
+
 			   memoryOffsetValue = atoi(Token[1]);      /* Converting string to interger*/
 			   Block_Address = allocate(memoryOffsetValue);
 
@@ -108,8 +127,8 @@ int inputCheck(void)
 					{
 						free_memory(Block_Address);
 						printf(" %d Bytes of heap released from address %p to %p\n\n", \
-					           4 * memoryOffsetValue,Block_Address, Block_Address + memoryOffsetValue);
-
+					           4 * memoryOffsetValue,Block_Address, Block_Address + memoryOffsetValue-1);
+                        Block_Address = NULL;
 					}
 			}
 
@@ -119,14 +138,47 @@ int inputCheck(void)
                 valid = 0;
 
                 if(!Block_Address)
-                    printf("Memory is not allocated yet!\n");
+                    printf("Memory is not allocated yet!\n\n");
 
                 else
                     display(Block_Address, memoryOffsetValue);
 
             }
 
+		else if (strcmp(Token[0], cmds[5]) == 0)        /*    write()    */
+		    {
+                valid = 0;
 
+                if(!Block_Address)
+                    printf("Memory is not allocated yet!\n\n");
+
+                /* Condition to check if user entered correct number of arguments*/
+
+                else  if (Token[1]==0 || Token[2] == 0)     /* No offset/value enterred*/
+                    {
+                         printf("Please enter a valid memory location and value, or <help> for details\n");
+                         return valid;
+                    }
+
+
+                else
+                    {
+
+                        memoryValue = atoi (Token[2]);      /* Converting string to interger*/
+                        location = atoi (Token[1]);         /* *(address + location) = place to write the value*/
+
+                        /* A condition to check the correct offset value between 0 and maximum offset derived by allocate() */
+
+                        if ((location > memoryOffsetValue-1) || (location < 0))
+                            {
+                                printf("Please enter a location value between 0 and %d\n", memoryOffsetValue-1);
+                                return valid;
+                            }
+
+                        write(Block_Address, location, memoryValue);
+                    }
+
+            }
 		else
 		    {
 		        valid = 0;
