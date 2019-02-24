@@ -9,12 +9,12 @@
 *
 *****************************************************************************/
 /**
-* @file memtest.c
+* @file write.c
 * @brief This source file contains a c program to manipulate and test memory.
 *
 * @author Ismail Yesildirek & Bijan Kianian
 * @date February 23 2019
-* @version 1.3
+* @version 1.0
 *
 */
 
@@ -23,6 +23,6 @@
 void write(int* address, int offset, int value)
 {
     *(address + offset) = value;
-    printf(" Value: %d written at address: %p\n\n", value, address + offset);
+    printf(" Value: %x written at address: %p\n\n", value, address + offset);
     return;
 }

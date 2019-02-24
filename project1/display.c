@@ -1,3 +1,4 @@
+
 /***************************************************************************
 * Copyright (C) 2019 by Ismail Yesildirek & Bijan Kianian
 *
@@ -23,12 +24,12 @@
 void display(int* address, int offset)
 {
 
-    printf("\n   Address                 Value \n");
-    printf("  ------------            -------\n");
+    printf("\n   Address                     Value \n");
+    printf("  ------------               ----------\n");
 
     for(int i = 0 ; i < offset ; i++)
     {
-        printf(" %p              %d\n" , address + i, *(address + i));
+        printf(" %p              0x%08x\n" , address + i, *(address + i));
     }
 
     printf("\n");

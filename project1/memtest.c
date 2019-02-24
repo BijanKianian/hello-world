@@ -13,8 +13,8 @@
 * @brief This source file contains a c program to manipulate and test memory.
 *
 * @author Ismail Yesildirek & Bijan Kianian
-* @date February 21 2019
-* @version 1.2
+* @date February 23 2019
+* @version 1.3
 *
 */
 
@@ -138,10 +138,38 @@ int inputCheck(void)
                 valid = 0;
 
                 if(!Block_Address)
-                    printf("Memory is not allocated yet!\n\n");
+                    {
+                        printf("Memory is not allocated yet!\n\n");
+                        return valid;
+                    }
 
-                else
-                    display(Block_Address, memoryOffsetValue);
+                else  if (Token[1] == 0 || Token[2] == 0)     /* No offset/value enterred*/
+                    {
+                         printf("Please enter a valid starting offset and number of words, or <help> for details\n");
+                         return valid;
+                    }
+
+                int startOffset = atoi (Token[1]);        /* Starting memory location offset from Block_Address*/
+
+        /* Condtion check for valid offset between 0 to block size (memoryOffsetValue) */
+
+                if( (startOffset < 0 ) || (startOffset > (memoryOffsetValue-1)))
+                    {
+                        printf("Please enter valid offset between 0 to %d\n", memoryOffsetValue-1);
+                        return valid;
+                    }
+
+
+                int numberOfwords = atoi ( Token[2]);       /* Number of locations (words) to display */
+
+                if(numberOfwords > (memoryOffsetValue - startOffset))
+                    {
+                        printf("Please enter valid number of words between 1 to %d\n", \
+                        memoryOffsetValue-startOffset);
+                        return valid;
+                    }
+
+                display(Block_Address+startOffset, numberOfwords);
 
             }
 
@@ -154,28 +182,35 @@ int inputCheck(void)
 
                 /* Condition to check if user entered correct number of arguments*/
 
-                else  if (Token[1]==0 || Token[2] == 0)     /* No offset/value enterred*/
+                else  if (Token[1] == 0 || Token[2] == 0)     /* No offset/value enterred*/
                     {
                          printf("Please enter a valid memory location and value, or <help> for details\n");
                          return valid;
                     }
 
-
-                else
+                else if (Token[2] != 0)
                     {
+                         int validInput = strcspn(Token[2], "ghijklmnopqrstuvwxyz"); /* Validating correct hex number*/
 
-                        memoryValue = atoi (Token[2]);      /* Converting string to interger*/
+                         if(validInput < strlen(Token[2]) ||(validInput > 8))
+                            {
+                                printf("Please enter a valid 32bit hex number for the memory value\n");
+                                return valid;
+                            }
+
+                        memoryValue = strtol(Token[2], NULL, 16); /* Converting string to hex */
                         location = atoi (Token[1]);         /* *(address + location) = place to write the value*/
 
                         /* A condition to check the correct offset value between 0 and maximum offset derived by allocate() */
 
                         if ((location > memoryOffsetValue-1) || (location < 0))
                             {
-                                printf("Please enter a location value between 0 and %d\n", memoryOffsetValue-1);
+                                printf("Please enter a memory location between 0 and %d\n", memoryOffsetValue-1);
                                 return valid;
                             }
 
                         write(Block_Address, location, memoryValue);
+
                     }
 
             }
