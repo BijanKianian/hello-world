@@ -14,7 +14,7 @@
 * response via functions
 *
 * @author Ismail Yesildirek & Bijan Kianian
-* @date February 23 2019
+* @date February 24 2019
 * @version 1.3
 *
 */
@@ -22,14 +22,18 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
+#include "allocate.h"
+#include "display.h"
+#include "free.h"
+#include "help.h"
+#include "invert.h"
+#include "write.h"
+#include "pattern.h"
 
 /* Prototype list */
 
-void help(void);
 int inputCheck(void);
-int* allocate(int);
-void free_memory(int*);
-void display(int*, int);
-void write(int*, int, int);
+void pattern_Time(int ,int ,int );
 
 /* End prototype list */

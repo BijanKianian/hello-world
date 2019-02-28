@@ -10,7 +10,7 @@
 *****************************************************************************/
 /**
 * @file help.c
-* @brief This source file contains code that provides the help function definition. 
+* @brief This source file contains code that provides the help function definition.
 *
 * @author Ismail Yesildirek & Bijan Kianian
 * @date February 17 2019
@@ -19,6 +19,7 @@
 */
 
 #include "memtest.h"
+#include "help.h"
 
   void help (void)
   {
@@ -26,14 +27,13 @@
     printf("\thelp - this message\n");
     printf("\tallocate <word> - allocate <words> of memory\n");
     printf("\tfree - free previously allocated memory\n");
-    printf("\tread <address> [<words>] - read from <address> for one or <words>\n");
-    printf("\twrite <address> <value>] - write <value> to <address>\n");
-    printf("\tinvert <address> <words>] -invert bits starting from <address> for <words>\n");
-    printf("\tpattern <address> <words> [<seed>] - write pseudorandom pattern at <address> for <words> using <seed>\n");
-    printf("\tverify <address> <words> [<seed>] - verify pseudorandom pattern at <address> for <words> using <seed>\n");
+    printf("\tread <-i> <address> [<words>] - read from <address> for one or <words> [<-i> immediate addressing]\n");
+    printf("\twrite <-i> <address> <value>] - write <value> to <address> [<-i> immediate addressing]\n");
+    printf("\tinvert <-i> <address> <words>] -invert bits starting from <address> for <words> [<-i> immediate addressing]\n");
+    printf("\tpattern <address> <words> [<seed>] - write pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]\n");
+    printf("\tverify <address> <words> [<seed>] - verify pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]\n");
     printf("\texit - exit the program\n");
-    
+
     return;
   }
-  
-    
+

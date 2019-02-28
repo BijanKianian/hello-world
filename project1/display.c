@@ -1,4 +1,3 @@
-
 /***************************************************************************
 * Copyright (C) 2019 by Ismail Yesildirek & Bijan Kianian
 *
@@ -10,28 +9,29 @@
 *
 *****************************************************************************/
 /**
-* @file memtest.c
-* @brief This source file contains a c program to manipulate and test memory.
+* @file display.c
+* @brief This source file contains code that provides the display() function definition
+* and displays content of memory in terms of 32 bit words in hexadecimal format.
 *
 * @author Ismail Yesildirek & Bijan Kianian
-* @date February 23 2019
-* @version 1.3
+* @date February 24 2019
+* @version 1.4
 *
 */
 
 #include "memtest.h"
+#include "display.h"
 
 void display(int* address, int offset)
 {
-
-    printf("\n   Address                     Value \n");
-    printf("  ------------               ----------\n");
-
+    printf("\n   Address                     Value \t Index\n");
+    printf("  ------------               ----------\t ------\n");
     for(int i = 0 ; i < offset ; i++)
     {
-        printf(" %p              0x%08x\n" , address + i, *(address + i));
+        printf(" %p              0x%08x    %d\n" , address + i, *(address + i),i);
     }
-
     printf("\n");
+	printf("Enter another command: \n");
+    printf("PES_Prj1 >> ");
     return;
 }

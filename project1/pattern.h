@@ -1,4 +1,4 @@
-/***************************************************************************
+/*****************************************************************************
 * Copyright (C) 2019 by Ismail Yesildirek & Bijan Kianian
 *
 * Redistribution, modification or use of this software in source or binary
@@ -9,21 +9,21 @@
 *
 *****************************************************************************/
 /**
-* @file write.c
-* @brief This source file contains a c program to manipulate and test memory.
+* @file free.h
+* @brief This header file provides user interface interaction
+* response via functions
 *
 * @author Ismail Yesildirek & Bijan Kianian
-* @date February 23 2019
+* @date February 26 2019
 * @version 1.0
 *
 */
 
-#include "write.h"
-#include "memtest.h"
-void write(int* address, int offset, int value)
-{
-    *(address + offset) = value;
-    printf(" Value: %x written at address: %p\n\n", value, address + offset);
-    printf("PES_Prj1 >> ");
-    return;
-}
+#include <math.h>
+
+/* Prototype list */
+
+void pattern(int*, int,unsigned int);
+ int generate_random(unsigned int);
+
+/* End prototype list */
