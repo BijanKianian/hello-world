@@ -17,12 +17,11 @@
 * @version 1.4
 *
 */
-
+#define test 0
 #include "memtest.h"
-#include <stdint.h>
 
-int memoryOffsetValue  = 0;        /* Offset value for the memory block to be allocated*/
-int* Block_Address = NULL;            /* Place holder for block address*/
+int memoryOffsetValue  = 0;       /* Offset value for the memory block to be allocated*/
+int* Block_Address = NULL;       /* Place holder for block address*/
 int allocStatus = 0;	/* Malloc Flag */
 
 int main()
@@ -39,20 +38,20 @@ int main()
 
     return 0;
 }
-/*########################################## inputCheck() Start #######################################################*/
+/*########################################## inputCheck() [Start] #######################################################*/
 int inputCheck(void)
 {
-    char *cmds[] = { "help", "exit", "allocate", "free", "read", "write", "invert", "pattern"};         /* Constant strings to be compared with user input commands */
+    char *cmds[] = { "help", "exit", "allocate", "free", "read", "write", "invert", "pattern", "validate"};         /* Constant strings to be compared with user input commands */
     char *Token[10] = {};               /* Array of strings for saving tokens in command line after parsing user input line*/
     char userInput[50] = {}, temp;      /* Array to store input command line string */
-    int memoryValue;                    /* Value to be written at memory locaion defined by write()*/
-    int memoryAddress;                /* Starting address for immediate addressing < -i >  in write() and read()*/
-	int Block_Address_lo;             /* lower 32 bit portion of Block_Address, used in immediate addressing to claculate address offset from start of block*/
-
-    int startOffset = 0;
-    //int seed = 0;
+    int memoryValue;
+    int memoryAddress ;
+    int Block_Address_lo;		/* Seperating the lower 32 bits of block address
+													to compare with user input address at Token[2] (immediate addressing)*/
+    //int memoryAddressOffset;
+    int Seed;
     int numberOfwords;					       /* Used in Pattern()*/
-    int location =0;                         /* Memory location offset from start of the block */
+    int startOffset;                         /* Memory location offset from start of the block */
     int compareResult;
 	char allocInput[6]; /*For re-alloc question*/
         /***** Parsing variables ******/
@@ -208,84 +207,35 @@ int inputCheck(void)
 		    {
                valid = 0;
 
-                if(!Block_Address)
-                    {
-                        printf("Memory is not allocated yet!\n\n");
-                        printf("PES_Prj1 >> ");
-                        return valid;
-                    }
-
-                if (Token[1] == 0 || Token[2] == 0)     /* No offset/value enterred*/
-                    {
-                        printf("Please enter a valid starting offset and number of words, or <help> for details\n");
-                        printf("PES_Prj1 >> ");
-                        return valid;
-                    }
+                if(!(alloc_test(Token[0], Token[1], Token[2], "0")))
+					return valid;
 
 
-									/**  Token[1] != "-i" with relative addressing in which case Token[1] = <offset>, Token[2] = <value>,Token[3] == 0.
-									  Token[1] == "-i" with immediate addressing < -i > hence Token[1] = <-i>, Token[2] = <address>, Token[3] = <value>.**/
+				if(strcmp(Token[1] , "-i"))																					//	For relative addressing:
+					{																														//	Token[1] != "-i" , Token[1] = <start offset>, Token[2] = <end offset >,Token[3] == 0.
+						startOffset = offsetCheck(Token[1]);
+						numberOfwords = lengthCheck(Token[2], startOffset);
 
-				if(strcmp(Token[1] , "-i")) /* Relative addressing <offset> < length>*/
-					{
-
-						   int startOffset = atoi (Token[1]);        /* Starting memory location offset from Block_Address*/
-
-					/* Condtion check for valid offset between 0 to block size (memoryOffsetValue) */
-
-						if((startOffset < 0 ) || (startOffset > (memoryOffsetValue-1)))
-							{
-								printf("Please enter valid offset between 0 to %d\n", memoryOffsetValue-1);
-								printf("PES_Prj1 >> ");
-								return valid;
-							}
-
-
-						int numberOfwords = atoi ( Token[2]);       /* Number of locations (words) to display */
-
-						if(numberOfwords > (memoryOffsetValue - startOffset))
-							{
-								printf("Please enter valid number of words between 1 to %d\n", \
-								memoryOffsetValue-startOffset);
-								printf("PES_Prj1 >> ");
-								return valid;
-							}
+						if((startOffset == -1) || (numberOfwords == 0))
+							return valid;
 
 						display(Block_Address+startOffset, numberOfwords);
-				    }
+						return valid;
+					}
 
-			/** Immediate addressing **/
+		        if(!strcmp(Token[1] , "-i"))    																				//	For immediate addressing:
+                    {																														//	Token[1] == "-i", Token[2] = <address>, Token[3] = <offset>.
+						Block_Address_lo =  (int64_t)Block_Address;
+						memoryAddress = addressCheck(Token[2], Block_Address_lo);
+						startOffset = (memoryAddress - Block_Address_lo)/4;
+						numberOfwords = lengthCheck(Token[3],startOffset);
 
-	            if(!strcmp(Token[1] , "-i"))    /* immediate addressing : write < -i > < address(hex) > < value(hex) > */
-                    {
+						if((memoryAddress== 0)||(numberOfwords == 0))
+							return valid;
 
-						int validInput = strcspn(Token[2], "ghijklmnopqrstuvwxyz.GHIJKLMNOPQRSTUVWXYZ,][{}`+-*/"); /* Validating start address for correct hex number*/
-
-						if((validInput < strlen(Token[2]) ||(validInput> 16)))
-							{
-								printf("Please enter a valid 64bit hex number for the memory address\n");
-								printf("PES_Prj1 >> ");
-								return valid;
-							}
-
-						memoryAddress = strtol(Token[2], NULL, 16); /* Converting input address string to hex,*/
-
-						Block_Address_lo =  (int64_t)Block_Address; /* Seperating the lower 32 bits of block address
-																	to compare with user input address at Token[2] */
-
-						/* Validating the starting address being in the range of allocated block */
-
-						if (memoryAddress- Block_Address_lo > 4*(memoryOffsetValue-1))	/* 4 bytes distance between two immediate memory addresses*/
-							{
-								printf("Please enter the starting memory address between %p and %p\n", Block_Address, Block_Address + memoryOffsetValue-1);
-								printf("PES_Prj1 >> ");
-								return valid;
-							}
-
-
-						int* Start = Block_Address + (memoryAddress - Block_Address_lo)/4;
-						int length = atoi (Token[3]);
-						display (Start, length);
+						int* Start = Block_Address + startOffset;
+						display(Start, numberOfwords);
+						return valid;
 					}
 
 			}
@@ -294,321 +244,148 @@ int inputCheck(void)
 		    {
                 valid = 0;
 
-                if(!Block_Address)
-                    {
-                        printf("Memory is not allocated yet!\n\n");
-                        printf("PES_Prj1 >> ");
-                        return valid;
-                    }
-                /* Condition to check if user entered correct number of arguments for <offset> , < value>*/
+				if(!(alloc_test(Token[0], Token[1], Token[2], "0")))
+					return valid;
 
-                if (Token[1] == 0 || Token[2] == 0)     /* No offset/value enterred*/
-                    {
-                        printf("Please enter a valid memory location and value, or <help> for details\n");
-                        printf("PES_Prj1 >> ");
-                        return valid;
-                    }
+				if(strcmp(Token[1] , "-i"))																					//	For relative addressing:
+					{																														//	Token[1] != "-i" , Token[1] = <offset>, Token[2] = <value>,Token[3] == 0.
+						startOffset = offsetCheck(Token[1]);
+						memoryValue = valueCheck(Token[2]);
 
+						if((startOffset == -1) || (memoryValue== 0))
+							return valid;
 
-                        /**  Token[1] != "-i" with relative addressing in which case Token[1] = <offset>, Token[2] = <value>,Token[3] == 0.
-                              Token[1] == "-i" with immediate addressing < -i > hence Token[1] = <-i>, Token[2] = <address>, Token[3] = <value>.**/
+						write(Block_Address, startOffset, memoryValue);
+						return valid;
+					}
 
-                        if(strcmp(Token[1] , "-i")) /* Relative addressing <offset> < value>*/
+                    if(!strcmp(Token[1] , "-i"))    /* immediate addressing : write < -i > < address(hex) > < value(hex) > */
                             {
-                                int validInput = strcspn(Token[2], "ghijklmnopqrstuvwxyz.GHIJKLMNOPQRSTUVWXYZ,][{}`+-*/"); /* Validating correct hex number*/
+                                Block_Address_lo =  (int64_t)Block_Address;
+                                memoryAddress= addressCheck(Token[2], Block_Address_lo);
+								memoryValue = valueCheck(Token[3]);
 
-                                if(validInput < strlen(Token[2]) ||(validInput > 8))
-                                    {
-                                        printf("Please enter a valid 32bit hex number for the value\n");
-                                        printf("PES_Prj1 >> ");
-                                        return valid;
-                                    }
+								if((memoryAddress == 0) || (memoryValue == 0))
+									return valid;
+                                startOffset = 0;		/* No offset for immediate addresing */
 
-                                memoryValue = strtol(Token[2], NULL, 16); /* Converting string to hex */
-                                location = atoi (Token[1]);         /* *(address + location) = place to write the value*/
 
-                                /* A condition to check the correct offset between 0 and maximum offset given to allocate() */
-
-                                if ((location > memoryOffsetValue-1) || (location < 0))
-                                    {
-                                        printf("Please enter a memory location between 0 and %d\n", memoryOffsetValue-1);
-                                        printf("PES_Prj1 >> ");
-                                        return valid;
-                                    }
-
-                                write(Block_Address, location, memoryValue);
-
-                            }
-
-                        if(!strcmp(Token[1] , "-i"))    /* immediate addressing : write < -i > < address(hex) > < value(hex) > */
-                            {
-
-                                int validInput = strcspn(Token[2], "ghijklmnopqrstuvwxyz.GHIJKLMNOPQRSTUVWXYZ,][{}`+-*/"); /* Validating correct hex number*/
-
-                                if(validInput < strlen(Token[2]) ||(validInput > 16))
-                                    {
-                                        printf("Please enter a valid 64bit hex number for the memory address\n");
-                                        printf("PES_Prj1 >> ");
-                                        return valid;
-                                    }
-
-                                memoryAddress = strtol(Token[2], NULL, 16); /* Converting input address string to hex,
-                                                                               produces an int equal to LSB 32 bits */
-                                Block_Address_lo =  (int64_t)Block_Address; /* Seperating the lower 32 bits of block address
-                                                                            to compare with user input address at Token[2] */
-
-                                /* A condition to check the correct offset value between 0 and maximum offset derived by allocate() */
-
-                                if (memoryAddress - Block_Address_lo > 4*(memoryOffsetValue-1))
-                                    {
-                                        printf("Please enter a memory address between %p and %p\n", Block_Address, Block_Address + memoryOffsetValue-1);
-                                        printf("PES_Prj1 >> ");
-                                        return valid;
-                                    }
-                /** Validating the 32 bit hex value to be written at address **/
-
-                                validInput = strcspn(Token[3], "ghijklmnopqrstuvwxyz.GHIJKLMNOPQRSTUVWXYZ,][{}`+-*/"); /* Validating correct hex number*/
-
-                                if(validInput < strlen(Token[3]) ||(validInput > 8))
-                                    {
-                                        printf("Please enter a valid 32bit hex number for the value\n");
-                                        printf("PES_Prj1 >> ");
-                                        return valid;
-                                    }
-
-                                memoryValue = strtol(Token[3], NULL, 16); /* Converting string to hex */
-
-                                location = 0;   /* offset = 0 for immediate addressing */
-                                write(Block_Address + (memoryAddress - Block_Address_lo)/4, location, memoryValue);
-                            }
+								write(Block_Address + (memoryAddress - Block_Address_lo)/4, startOffset, memoryValue);
+								return valid;
+							}
 
             }
 		else if (strcmp(Token[0], cmds[6]) == 0)        /*    invert()    */
             {
             valid = 0;
-                if (!Block_Address)
-                    {
-                        printf("Memory is not allocated yet!\n\n");
-                        printf("PES_Prj1 >> ");
-                        return valid;
-                    }
-     /* Condition to check if user entered correct number of arguments for <offset> , < value>*/
+                if(!(alloc_test(Token[0], Token[1], Token[2], "0")))
+					return valid;
 
-                if (Token[1] == 0 || Token[2] == 0)     /* No offset/value enterred*/
-                    {
-                        printf("Please enter a valid starting offset and number of words, or <help> for details\n");
-                        printf("PES_Prj1 >> ");
-                        return valid;
-                    }
 				if(strcmp(Token[1] , "-i")) /* Relative addressing <offset> < value>*/
-                     {
-						int startOffset = atoi(Token[1]);        /* Starting memory location offset from Block_Address*/
+                    {																														//	Token[1] != "-i" , Token[1] = <offset>, Token[2] = <value>,Token[3] == 0.
+						startOffset = offsetCheck(Token[1]);
+						numberOfwords = lengthCheck(Token[2], startOffset);
 
-				/* Condtion check for valid offset between 0 to block size (memoryOffsetValue) */
-
-						if ((startOffset < 0) || (startOffset > (memoryOffsetValue - 1)))
-							{
-								printf("Please enter valid offset between 0 to %d\n", memoryOffsetValue - 1);
-								printf("PES_Prj1 >> ");
-								return valid;
-							}
-
-					int numberOfwords = atoi(Token[2]);
-
-					if(numberOfwords > (memoryOffsetValue - startOffset))
-						{
-							printf("Please enter valid number of words between 1 to %d\n", \
-							memoryOffsetValue-startOffset);
-							printf("PES_Prj1 >> ");
+						if((startOffset == -1) || (numberOfwords == 0))
 							return valid;
-						}
-                        int wordSize = numberOfwords;
-                        /**
-                        * Invert Byte Block per wordSize selected
-                        * and start timer.
-                        **/
-                        clock_t executionT;
-                        executionT = clock();
-                        while ((numberOfwords <= wordSize) && (numberOfwords >=0))
-                            {
-                                invert(Block_Address+startOffset, numberOfwords-1);
-                                numberOfwords--;
-                            }
-                        executionT = clock() - executionT;
-                        double time = ((double)executionT)/CLOCKS_PER_SEC;
-                        printf("Invert function execution time is milli: %fsec.\n",time*1000);
-                        printf("Enter another command \n\n");
-                        printf("PES_Prj1 >> ");
 
+						invert_Time( startOffset, numberOfwords);
+						return valid;
+					}
 
-					 }
 
 				  if(!strcmp(Token[1] , "-i"))    /* immediate addressing : write < -i > < address(hex) > < value(hex) > */
 					{
+						Block_Address_lo =  (int64_t)Block_Address;
+						memoryAddress = addressCheck(Token[2], Block_Address_lo);
+						startOffset = (memoryAddress - Block_Address_lo)/4;
+						numberOfwords = lengthCheck(Token[3], startOffset);
 
-						int validInput = strcspn(Token[2], "ghijklmnopqrstuvwxyz.GHIJKLMNOPQRSTUVWXYZ,][{}`+-*/"); /* Validating correct hex number*/
-
-						if(validInput < strlen(Token[2]) ||(validInput > 16))
-							{
-								printf("Please enter a valid 64bit hex number for the memory address\n");
-								printf("PES_Prj1 >> ");
-								return valid;
-							}
-
-						memoryAddress = strtol(Token[2], NULL, 16); /* Converting input address string to hex,
-																	   produces an int equal to LSB 32 bits */
-						Block_Address_lo =  (int64_t)Block_Address; /* Seperating the lower 32 bits of block address
-																	to compare with user input address at Token[2] */
-
-						int startOffset = (memoryAddress - Block_Address_lo)/4;
-
-						/* A condition to check the correct offset value between 0 and maximum offset derived by allocate() */
-
-						if (memoryAddress - Block_Address_lo > 4*(memoryOffsetValue-1))	/* 4 bytes distance between two immediate memory addresses*/
-							{
-								printf("Please enter a memory address between %p and %p\n", Block_Address, Block_Address + memoryOffsetValue-1);
-								printf("PES_Prj1 >> ");
-								return valid;
-							}
-
-						int numberOfwords = atoi(Token[3]);
+						if((memoryAddress == 0)||(numberOfwords == 0))
+							return valid;
 
 
-
-						/* Number of locations (words) to display */
-						if (numberOfwords > (memoryOffsetValue - startOffset))
-							{
-								printf("Please enter valid number of words between 1 to %d\n", \
-									memoryOffsetValue - startOffset);
-								printf("PES_Prj1 >> ");
-								return valid;
-							}
-                        int wordSize = numberOfwords;
-                        /**
-                        * Invert Byte Block per wordSize selected
-                        * and start timer.
-                        **/
-                        clock_t executionT;
-                        executionT = clock();
-                        while ((numberOfwords <= wordSize) && (numberOfwords >=0))
-                            {
-                                invert(Block_Address+startOffset, numberOfwords-1);
-                                numberOfwords--;
-                            }
-                        executionT = clock() - executionT;
-                        double time = ((double)executionT)/CLOCKS_PER_SEC;
-                        printf("Invert function execution time is milli: %fsec.\n",time*1000);
-                        printf("Enter another command \n\n");
-                        printf("PES_Prj1 >> ");
+						invert_Time( startOffset, numberOfwords);
+						return valid;
                     }
-
             }
         else if (strcmp(Token[0], cmds[7]) == 0)        /*    pattern()    */
             {
 				valid = 0;
-                if(!Block_Address)
-                    {
-                        printf("Memory is not allocated yet!\n\n");
-                        printf("PES_Prj1 >> ");
-                        return valid;
-                    }
-
-                if (Token[1] == 0 || Token[2] == 0 || Token[3] == 0)     /* No offset/value enterred*/
-                    {
-                        printf("Please enter a valid starting offset, number of words and seed, or <help> for details\n");
-                        printf("PES_Prj1 >> ");
-                        return valid;
-                    }
+                if(!(alloc_test(Token[0], Token[1], Token[2], Token[3])))
+					return valid;
 
 				if(strcmp(Token[1] , "-i")) /* Relative addressing <offset> < value>*/
-                     {
-						int startOffset = atoi (Token[1]);        /* Starting memory location offset from Block_Address*/
+                    {
+						startOffset = offsetCheck(Token[1]);
+						numberOfwords = lengthCheck(Token[2], startOffset);
 
-				/* Condtion check for valid offset between 0 to block size (memoryOffsetValue) */
-
-						if((startOffset < 0 ) || (startOffset > (memoryOffsetValue-1)))
-							{
-								printf("Please enter valid offset between 0 to %d\n", memoryOffsetValue-1);
-								printf("PES_Prj1 >> ");
-								return valid;
-							}
-
-						int numberOfwords = atoi ( Token[2]);       /* Number of locations (words) to write the random # */
-
-						if(numberOfwords > (memoryOffsetValue - startOffset))
-							{
-								printf("Please enter valid number of words between 1 to %d\n", \
-								memoryOffsetValue-startOffset);
-								printf("PES_Prj1 >> ");
-								return valid;
-							}
-
-					  if (Token[3] != 0)
-						{
-							int validInput = strcspn(Token[3],\
-							 "abcdefghijklmnopqrstuvwxyz.ABCDEFGHIJKLMNOPQRSTUVWXYZ,][{}`/+-*"); /* Validating correct int number for Seed*/
-
-							if(validInput < strlen(Token[3]) ||(validInput > 10)) /* Check if the number(seed) in larger than 10 digits
-																					 (as in max 32 bit interger = 4,294,967,295)*/
-								{
-									printf("Please enter a valid positive number for the 'Seed' value\n");
-									printf("PES_Prj1 >> ");
-									return valid;
-								}
-
-							int Seed = atoi (Token[3]);        /* Converting string to number */
-							pattern_Time( startOffset, numberOfwords,Seed );
-						 }
-					 }
-
-			  if(!strcmp(Token[1] , "-i"))    /* immediate addressing : write < -i > < address(hex) > < value(hex) > */
-				{
-
-					int validInput = strcspn(Token[2], "ghijklmnopqrstuvwxyz.GHIJKLMNOPQRSTUVWXYZ,][{}`+-*/"); /* Validating correct hex number*/
-
-					if(validInput < strlen(Token[2]) ||(validInput > 16))
-						{
-							printf("Please enter a valid 64bit hex number for the memory address\n");
-							printf("PES_Prj1 >> ");
+						if((startOffset == -1) || (numberOfwords == 0))
 							return valid;
-						}
 
-					memoryAddress = strtol(Token[2], NULL, 16); /* Converting input address string to hex,
-																   produces an int equal to LSB 32 bits */
-					Block_Address_lo =  (int64_t)Block_Address; /* Seperating the lower 32 bits of block address
-																to compare with user input address at Token[2] */
-
-					 startOffset = (memoryAddress - Block_Address_lo)/4;
-
-					/* A condition to check the correct offset value between 0 and maximum offset derived by allocate() */
-
-					if (memoryAddress - Block_Address_lo > 4*(memoryOffsetValue-1))	/* 4 bytes distance between two immediate memory addresses*/
-						{
-							printf("Please enter a memory address between %p and %p\n", Block_Address, Block_Address + memoryOffsetValue-1);
-							printf("PES_Prj1 >> ");
+						Seed = seedCheck(Token[3]);
+						if(Seed == 0)
 							return valid;
-						}
+						pattern_Time( startOffset, numberOfwords,Seed );
+					}
 
-					 numberOfwords = atoi(Token[3]);
 
-				  if (Token[4] != 0)
-						{
-							int validInput = strcspn(Token[4],\
-							 "abcdefghijklmnopqrstuvwxyz.ABCDEFGHIJKLMNOPQRSTUVWXYZ,][{}`/+-*"); /* Validating correct int number for Seed*/
+				  if(!strcmp(Token[1] , "-i"))    /* immediate addressing : write < -i > < address(hex) > < value(hex) > */
+					{
 
-							if(validInput < strlen(Token[4]) ||(validInput > 10)) /* Check if the number(seed) in larger than 10 digits
-																					 (as in max 32 bit interger = 4,294,967,295)*/
-								{
-									printf("Please enter a valid positive number for the 'Seed' value\n");
-									printf("PES_Prj1 >> ");
-									return valid;
-								}
+						Block_Address_lo =  (int64_t)Block_Address;
+						memoryAddress = addressCheck(Token[2], Block_Address_lo);
+						startOffset = (memoryAddress - Block_Address_lo)/4;
+						numberOfwords = lengthCheck(Token[3], startOffset );
 
-							int Seed = atoi (Token[4]);        /* Converting string to number */
-							pattern_Time( startOffset,  numberOfwords, Seed );
-						 }
-				}
+						if((memoryAddress== 0)||(numberOfwords == 0))
+							return valid;
 
+
+						Seed = seedCheck(Token[4]);
+						pattern_Time( startOffset,  numberOfwords, Seed );
+					}
+            }
+        else if (strcmp(Token[0], cmds[8]) == 0)        /*    validate()    */
+            {
+				valid = 0;
+                if(!(alloc_test(Token[0], Token[1], Token[2], Token[3])))
+					return valid;
+
+				if(strcmp(Token[1] , "-i")) /* Relative addressing <offset> < value>*/
+                    {
+						startOffset = offsetCheck(Token[1]);
+						numberOfwords = lengthCheck(Token[2], startOffset);
+
+						if((startOffset == -1) || (numberOfwords == 0))
+							return valid;
+
+						Seed = seedCheck(Token[3]);
+						if(Seed == 0)
+							return valid;
+
+						validate( Block_Address,startOffset, numberOfwords,Seed );
+					}
+
+
+				  if(!strcmp(Token[1] , "-i"))    /* immediate addressing : write < -i > < address(hex) > < value(hex) > */
+					{
+
+						Block_Address_lo =  (int64_t)Block_Address;
+						memoryAddress = addressCheck(Token[2], Block_Address_lo);
+						startOffset = (memoryAddress - Block_Address_lo)/4;
+						numberOfwords = lengthCheck(Token[3], startOffset );
+
+						if((memoryAddress== 0)||(numberOfwords == 0))
+							return valid;
+
+
+						Seed = seedCheck(Token[4]);
+						if(Seed == 0)
+							return valid;
+
+						validate( Block_Address, startOffset,  numberOfwords, Seed );
+					}
             }
 		else
 		    {
@@ -619,9 +396,9 @@ int inputCheck(void)
 
 	return valid;
 }
- /*###################################### inputCheck () End ###############################################*/
+ /*###################################### inputCheck () [End] ###############################################*/
 
- /**                                   { Functions Decfinision }                                          **/
+ /**                               			    { Functions Decfinision }                                					  **/
 
  /************************************** pattern_Time() [Start]*********************************************/
 
@@ -645,3 +422,171 @@ int inputCheck(void)
 				return;
 	}
 /************************************** pattern_Time() [End]************************************************/
+
+/************************************** offsetCheck() [Start] ***************************************/
+
+int offsetCheck(char* str)
+{
+	int Offset = atoi (str);        /* Starting memory location offset from Block_Address*/
+
+					/* Condtion check for valid offset between 0 to block size (memoryOffsetValue) */
+
+						if((Offset < 0 ) || (Offset > (memoryOffsetValue-1)))
+							{
+								printf("Please enter valid offset between 0 to %d\n", memoryOffsetValue-1);
+								printf("PES_Prj1 >> ");
+								return -1;
+							}
+
+		return Offset;
+}
+/******************************************offsetCheck() [End] *************************/
+
+/******************************************lengthCheck() [Start] ************************/
+int lengthCheck(char* str, int startOffset)
+{
+	int length = atoi (str);       /* Number of locations (words) to display */
+		if(length > (memoryOffsetValue - startOffset))
+							{
+								printf("Please enter valid length between 1 to %d\n", \
+								memoryOffsetValue-startOffset);
+								printf("PES_Prj1 >> ");
+								return 0;
+							}
+	return length;
+}
+/*****************************************lengthCheck() [End] ***************************/
+
+/***************************************** valueCheck() [Start] ************************/
+
+int valueCheck(char* str)
+{
+
+	 int validInput = strcspn(str, "ghijklmnopqrstuvwxyz.GHIJKLMNOPQRSTUVWXYZ,][{}`+-*/"); /* Validating correct hex number*/
+
+                                if(validInput < strlen(str) ||(validInput > 8))
+                                    {
+                                        printf("Please enter a valid 32bit hex number for the value\n");
+                                        printf("PES_Prj1 >> ");
+                                        return 0;
+                                    }
+
+                                int memoryValue = strtol(str, NULL, 16); /* Converting string to hex */
+
+		 return memoryValue;
+ }
+/****************************************valueCheck() [End] **************************/
+
+
+/************************************** addressCheck() [Start] ************************************/
+
+int addressCheck(char* str1, int Block_Address_lo)
+{
+
+	int memoryAddress;                /* Starting address for immediate addressing < -i >  in write() and read()*/
+    int validInput;
+
+	 validInput = strcspn(str1, "ghijklmnopqrstuvwxyz.GHIJKLMNOPQRSTUVWXYZ,][{}`+-*/"); /* Validating start address for correct hex number*/
+
+						if((validInput < strlen(str1) || (validInput> 16)))
+							{
+								printf("Please enter a valid 64bit hex number for the memory address\n");
+								printf("PES_Prj1 >> ");
+								return 0;
+							}
+
+						memoryAddress = strtol(str1, NULL, 16); /* Converting input address string to hex,*/
+
+						/* Validating the starting address being in the range of allocated block */
+
+						if (memoryAddress- Block_Address_lo > 4*(memoryOffsetValue-1))	/* 4 bytes distance between two immediate memory addresses*/
+							{
+								printf("Please enter the starting memory address between %p and %p\n", Block_Address, Block_Address + memoryOffsetValue-1);
+								printf("PES_Prj1 >> ");
+								return 0;
+							}
+
+        return memoryAddress;
+}
+/**************************************addressCheck [End] ************************************/
+
+/************************************** alloc_test() [Start] *************************************************/
+//	This function tests a the beginnign of each user command for aloocated memory block.
+//        if it is not allocated, an error message will inform the user
+
+int alloc_test(char* str0, char* str1, char* str2, char* str3)
+{
+
+				if(!Block_Address)
+                    {
+                        printf("Memory is not allocated yet!\n\n");
+                        printf("PES_Prj1 >> ");
+                        return 0;
+                    }
+
+                if (str1== 0 || str2 == 0)     /* No offset/value enterred*/
+                    {
+                        printf("Please enter a valid starting offset and number of words, or <help> for details\n");
+                        printf("PES_Prj1 >> ");
+                        return 0;
+                    }
+
+
+				 if (!(strcmp(str0,"pattern")) && str3 == 0)  /* No offset/value enterred*/
+                    {
+                        printf("Please enter a valid starting offset, number of words and seed, or <help> for details\n");
+                        printf("PES_Prj1 >> ");
+                        return 0;
+                    }
+
+	return 1;
+}
+/************************************** alloc_test() [End] *************************************************/
+ /**************************************invert_Time() [Start]************************************************/
+
+ void invert_Time (int startOffset, int numberOfwords )
+
+ {
+	 int wordSize = numberOfwords;
+	/**
+	* Invert Byte Block per wordSize selected
+	* and start timer.
+	**/
+	clock_t executionT;
+	executionT = clock();
+	while ((numberOfwords <= wordSize) && (numberOfwords -1>=0))
+		{
+			invert(Block_Address+startOffset-1, numberOfwords);
+			numberOfwords--;
+		}
+	executionT = clock() - executionT;
+	double time = ((double)executionT)/CLOCKS_PER_SEC;
+	printf("Invert function execution time is milli: %fsec.\n",time*1000);
+	printf("Enter another command \n\n");
+	printf("PES_Prj1 >> ");
+ }
+
+ /***************************************** invert_Time() [End]*************************************/
+
+ /**************************************** seedCheck() [Start] *************************************/
+
+ int seedCheck(char *str)
+ {
+	  if (str != 0)
+		{
+			int validInput = strcspn(str,\
+			 "abcdefghijklmnopqrstuvwxyz.ABCDEFGHIJKLMNOPQRSTUVWXYZ,][{}`/+-*"); /* Validating correct int number for Seed*/
+
+			if(validInput < strlen(str) ||(validInput > 10)) /* Check if the number(seed) in larger than 10 digits
+																	 (as in max 32 bit interger = 4,294,967,295)*/
+				{
+					printf("Please enter a valid positive number for the 'Seed' value\n");
+					printf("PES_Prj1 >> ");
+					return 0;
+				}
+
+		}
+    int Seed = atoi (str);        /* Converting string to number */
+	return Seed;
+ }
+/**************************************** seedCheck() [End] *************************************/

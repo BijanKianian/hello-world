@@ -15,14 +15,12 @@
 void pattern (int* start, int index, unsigned int seed) /* start represents begining address
                                                 of memory cells to be written by random # */
     {
-        unsigned int next = generate_random(seed);
-
-
+        
         for (int i = 0 ; i <= index-1 ; i++)
             {
-                unsigned int num = generate_random(next);
-                *(start + i) = num;             /* Writing the generated number into memory block */
-                next = num;
+                unsigned int next = generate_random(seed);
+                *(start + i) = next;             /* Writing the generated number into memory block */
+                seed = next;
             }
         printf("\n\t##########################\n");
         printf("\t#     Random numbers     #\n") ;

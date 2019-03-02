@@ -1,0 +1,21 @@
+help
+allocate 5
+read 0 5
+free
+allocate 2
+allocate 6
+Y
+read 0 6
+write 0 1111ffff
+write 1 2222dddd
+write 3 3333eeee
+write 6 bbbb7777
+read 0 6
+invert 0 6
+read 0 6
+free
+free
+allocate 1
+allocate 5
+no
+exit

@@ -33,6 +33,7 @@
     printf("\tpattern <address> <words> [<seed>] - write pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]\n");
     printf("\tverify <address> <words> [<seed>] - verify pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]\n");
     printf("\texit - exit the program\n");
+    printf("\tNote: Please enter hexadecimal numbers without '0x'\n");
 
     return;
   }
