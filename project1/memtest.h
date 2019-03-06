@@ -30,7 +30,7 @@
 #include "invert.h"
 #include "write.h"
 #include "pattern.h"
-#include "validate.h"
+#include "verify.h"
 
 /* Prototype list */
 

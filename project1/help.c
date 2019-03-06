@@ -27,11 +27,16 @@
     printf("\thelp - this message\n");
     printf("\tallocate <word> - allocate <words> of memory\n");
     printf("\tfree - free previously allocated memory\n");
-    printf("\tread <-i> <address> [<words>] - read from <address> for one or <words> [<-i> immediate addressing]\n");
-    printf("\twrite <-i> <address> <value>] - write <value> to <address> [<-i> immediate addressing]\n");
-    printf("\tinvert <-i> <address> <words>] -invert bits starting from <address> for <words> [<-i> immediate addressing]\n");
-    printf("\tpattern <address> <words> [<seed>] - write pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]\n");
-    printf("\tverify <address> <words> [<seed>] - verify pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]\n");
+    printf("\tread <-i> <address> [<words>] -\n");
+    printf("\tread from <address> for one or <words> [<-i> immediate addressing]\n");
+    printf("\twrite <-i> <address> <value>] -\n");
+    printf("\twrite <value> to <address> [<-i> immediate addressing]\n");
+    printf("\tinvert <-i> <address> <words>] -\n");
+    printf("\tinvert bits starting from <address> for <words> [<-i> immediate addressing]\n");
+    printf("\tpattern <-i> <address> <words> [<seed>] -\n");
+    printf("\twrite pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]\n");
+    printf("\tverify <-i> <address> <words> [<seed>] -\n");
+    printf("\tverify pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]\n");
     printf("\texit - exit the program\n");
     printf("\tNote: Please enter hexadecimal numbers without '0x'\n");
 

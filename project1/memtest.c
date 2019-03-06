@@ -13,8 +13,8 @@
 * @brief This source file contains a c program to manipulate and test memory.
 *
 * @author Ismail Yesildirek & Bijan Kianian
-* @date February 24 2019
-* @version 1.4
+* @date March 6 2019
+* @version 1.5
 *
 */
 #define test 0
@@ -41,7 +41,7 @@ int main()
 /*########################################## inputCheck() [Start] #######################################################*/
 int inputCheck(void)
 {
-    char *cmds[] = { "help", "exit", "allocate", "free", "read", "write", "invert", "pattern", "validate"};         /* Constant strings to be compared with user input commands */
+    char *cmds[] = { "help", "exit", "allocate", "free", "read", "write", "invert", "pattern", "verify"};         /* Constant strings to be compared with user input commands */
     char *Token[10] = {};               /* Array of strings for saving tokens in command line after parsing user input line*/
     char userInput[50] = {}, temp;      /* Array to store input command line string */
     int memoryValue;
@@ -227,10 +227,13 @@ int inputCheck(void)
                     {																														//	Token[1] == "-i", Token[2] = <address>, Token[3] = <offset>.
 						Block_Address_lo =  (int64_t)Block_Address;
 						memoryAddress = addressCheck(Token[2], Block_Address_lo);
+						
+				        if(memoryAddress == 0)
+							return valid;
 						startOffset = (memoryAddress - Block_Address_lo)/4;
 						numberOfwords = lengthCheck(Token[3],startOffset);
 
-						if((memoryAddress== 0)||(numberOfwords == 0))
+						if(numberOfwords == 0)
 							return valid;
 
 						int* Start = Block_Address + startOffset;
@@ -298,10 +301,14 @@ int inputCheck(void)
 					{
 						Block_Address_lo =  (int64_t)Block_Address;
 						memoryAddress = addressCheck(Token[2], Block_Address_lo);
+						
+						if(memoryAddress == 0)
+							return valid;
+						
 						startOffset = (memoryAddress - Block_Address_lo)/4;
 						numberOfwords = lengthCheck(Token[3], startOffset);
 
-						if((memoryAddress == 0)||(numberOfwords == 0))
+						if(numberOfwords == 0)
 							return valid;
 
 
@@ -336,10 +343,14 @@ int inputCheck(void)
 
 						Block_Address_lo =  (int64_t)Block_Address;
 						memoryAddress = addressCheck(Token[2], Block_Address_lo);
+						
+						if(memoryAddress == 0)
+							return valid;
+						
 						startOffset = (memoryAddress - Block_Address_lo)/4;
 						numberOfwords = lengthCheck(Token[3], startOffset );
 
-						if((memoryAddress== 0)||(numberOfwords == 0))
+						if(numberOfwords == 0)
 							return valid;
 
 
@@ -350,7 +361,7 @@ int inputCheck(void)
 						pattern_Time( startOffset,  numberOfwords, Seed );
 					}
             }
-        else if (strcmp(Token[0], cmds[8]) == 0)        /*    validate()    */
+        else if (strcmp(Token[0], cmds[8]) == 0)        /*    verify()    */
             {
 				valid = 0;
                 if(!(alloc_test(Token[0], Token[1], Token[2], Token[3])))
@@ -368,7 +379,7 @@ int inputCheck(void)
 						if(Seed == -1)
 							return valid;
 
-						validate( Block_Address,startOffset, numberOfwords,Seed );
+						verify( Block_Address,startOffset, numberOfwords,Seed );
 					}
 
 
@@ -377,10 +388,14 @@ int inputCheck(void)
 
 						Block_Address_lo =  (int64_t)Block_Address;
 						memoryAddress = addressCheck(Token[2], Block_Address_lo);
+						
+						if(memoryAddress == 0)
+							return valid;
+						
 						startOffset = (memoryAddress - Block_Address_lo)/4;
 						numberOfwords = lengthCheck(Token[3], startOffset );
 
-						if((memoryAddress== 0)||(numberOfwords == 0))
+						if(numberOfwords == 0)
 							return valid;
 
 
@@ -388,7 +403,7 @@ int inputCheck(void)
 						if(Seed == -1)
 							return valid;
 
-						validate( Block_Address, startOffset,  numberOfwords, Seed );
+						verify( Block_Address, startOffset,  numberOfwords, Seed );
 					}
             }
 		else
@@ -492,9 +507,9 @@ int addressCheck(char* str1, int Block_Address_lo)
 
 	 validInput = strcspn(str1, "ghijklmnopqrstuvwxyz.GHIJKLMNOPQRSTUVWXYZ,][{}`+-*/"); /* Validating start address for correct hex number*/
 
-						if((validInput < strlen(str1) || (validInput> 16)))
+						if((validInput < strlen(str1) || (validInput != 12)))	/* Maximum 12 characters for address value */
 							{
-								printf("Please enter a valid 64bit hex number for the memory address\n");
+								printf("Please enter a valid hex number for the memory address\n");
 								printf("PES_Prj1 >> ");
 								return 0;
 							}
@@ -503,7 +518,8 @@ int addressCheck(char* str1, int Block_Address_lo)
 
 						/* Validating the starting address being in the range of allocated block */
 
-						if (memoryAddress- Block_Address_lo > 4*(memoryOffsetValue-1))	/* 4 bytes distance between two immediate memory addresses*/
+						if ((memoryAddress- Block_Address_lo > 4*(memoryOffsetValue-1)) ||  /* 4 bytes distance between two immediate memory addresses*/
+     						(memoryAddress < Block_Address_lo))
 							{
 								printf("Please enter the starting memory address between %p and %p\n", Block_Address, Block_Address + memoryOffsetValue-1);
 								printf("PES_Prj1 >> ");
@@ -534,7 +550,7 @@ int alloc_test(char* str0, char* str1, char* str2, char* str3)
                         printf("PES_Prj1 >> ");
                         return 0;
                     }
-					
+
 			return 1;
 }
 /************************************** alloc_test() [End] *************************************************/

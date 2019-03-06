@@ -31,7 +31,6 @@ void display(int* address, int offset)
         printf(" %p              0x%08x    %d\n" , address + i, *(address + i),i);
     }
     printf("\n");
-	printf("Enter another command: \n");
-    printf("PES_Prj1 >> ");
+	printf("PES_Prj1 >> ");
     return;
 }
