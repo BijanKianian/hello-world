@@ -40,7 +40,7 @@ int addressCheck(char*, int);
 int valueCheck(char*);
 int offsetCheck(char*);
 int lengthCheck(char*, int);
-int alloc_test(char*,char*, char*, char*);
+int alloc_test(char*, char*, char*);
 void invert_Time(int, int);
 int seedCheck(char*);
 

@@ -203,11 +203,11 @@ int inputCheck(void)
 			}
 
 
-		else if (strcmp(Token[0], cmds[4]) == 0)        /*    display()   */
+		else if (strcmp(Token[0], cmds[4]) == 0)        /*    read()   */
 		    {
                valid = 0;
 
-                if(!(alloc_test(Token[0], Token[1], Token[2], "0")))
+                if(!(alloc_test( Token[1], Token[2], Token[3])))
 					return valid;
 
 
@@ -227,7 +227,7 @@ int inputCheck(void)
                     {																														//	Token[1] == "-i", Token[2] = <address>, Token[3] = <offset>.
 						Block_Address_lo =  (int64_t)Block_Address;
 						memoryAddress = addressCheck(Token[2], Block_Address_lo);
-						
+
 				        if(memoryAddress == 0)
 							return valid;
 						startOffset = (memoryAddress - Block_Address_lo)/4;
@@ -247,7 +247,7 @@ int inputCheck(void)
 		    {
                 valid = 0;
 
-				if(!(alloc_test(Token[0], Token[1], Token[2], "0")))
+				if(!(alloc_test( Token[1], Token[2], Token[3])))
 					return valid;
 
 				if(strcmp(Token[1] , "-i"))																					//	For relative addressing:
@@ -281,7 +281,7 @@ int inputCheck(void)
 		else if (strcmp(Token[0], cmds[6]) == 0)        /*    invert()    */
             {
             valid = 0;
-                if(!(alloc_test(Token[0], Token[1], Token[2], "0")))
+                if(!(alloc_test( Token[1], Token[2], Token[3])))
 					return valid;
 
 				if(strcmp(Token[1] , "-i")) /* Relative addressing <offset> < value>*/
@@ -301,10 +301,10 @@ int inputCheck(void)
 					{
 						Block_Address_lo =  (int64_t)Block_Address;
 						memoryAddress = addressCheck(Token[2], Block_Address_lo);
-						
+
 						if(memoryAddress == 0)
 							return valid;
-						
+
 						startOffset = (memoryAddress - Block_Address_lo)/4;
 						numberOfwords = lengthCheck(Token[3], startOffset);
 
@@ -319,7 +319,7 @@ int inputCheck(void)
         else if (strcmp(Token[0], cmds[7]) == 0)        /*    pattern()    */
             {
 				valid = 0;
-                if(!(alloc_test(Token[0], Token[1], Token[2], Token[3])))
+                if(!(alloc_test( Token[1], Token[2], Token[3])))
 					return valid;
 
 				if(strcmp(Token[1] , "-i")) /* Relative addressing <offset> < value>*/
@@ -343,10 +343,10 @@ int inputCheck(void)
 
 						Block_Address_lo =  (int64_t)Block_Address;
 						memoryAddress = addressCheck(Token[2], Block_Address_lo);
-						
+
 						if(memoryAddress == 0)
 							return valid;
-						
+
 						startOffset = (memoryAddress - Block_Address_lo)/4;
 						numberOfwords = lengthCheck(Token[3], startOffset );
 
@@ -364,7 +364,7 @@ int inputCheck(void)
         else if (strcmp(Token[0], cmds[8]) == 0)        /*    verify()    */
             {
 				valid = 0;
-                if(!(alloc_test(Token[0], Token[1], Token[2], Token[3])))
+                if(!(alloc_test(Token[1], Token[2], Token[3])))
 					return valid;
 
 				if(strcmp(Token[1] , "-i")) /* Relative addressing <offset> < value>*/
@@ -388,10 +388,10 @@ int inputCheck(void)
 
 						Block_Address_lo =  (int64_t)Block_Address;
 						memoryAddress = addressCheck(Token[2], Block_Address_lo);
-						
+
 						if(memoryAddress == 0)
 							return valid;
-						
+
 						startOffset = (memoryAddress - Block_Address_lo)/4;
 						numberOfwords = lengthCheck(Token[3], startOffset );
 
@@ -534,7 +534,7 @@ int addressCheck(char* str1, int Block_Address_lo)
 //	This function tests at the beginnign of each user command for aloocated memory block and proper arguments.
 //        if it is not allocated, or address/offset or value are not provided, an error message will inform the user
 
-int alloc_test(char* str0, char* str1, char* str2, char* str3)
+int alloc_test(char* str1, char* str2, char* str3)
 {
 
 				if(!Block_Address)
@@ -544,7 +544,7 @@ int alloc_test(char* str0, char* str1, char* str2, char* str3)
                         return 0;
                     }
 
-                  if (str1== 0 || str2 == 0 || str3 == 0)     /* No offset/value enterred*/
+                  if ((str1 == 0 || str2 == 0) || (!strcmp(str1,"-i") && str3 == 0))   /* No offset/value enterred*/
                     {
                         printf("Please enter sufficient parameters for this command, or <help> for details\n");
                         printf("PES_Prj1 >> ");
