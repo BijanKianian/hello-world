@@ -13,8 +13,8 @@
 * @brief This source file contains code that provides the help function definition.
 *
 * @author Ismail Yesildirek & Bijan Kianian
-* @date February 17 2019
-* @version 1.1
+* @date March 6 2019
+* @version 1.2
 *
 */
 
@@ -23,22 +23,22 @@
 
   void help (void)
   {
-    printf(" mem_test commands:\n");
-    printf("\thelp - this message\n");
-    printf("\tallocate <word> - allocate <words> of memory\n");
-    printf("\tfree - free previously allocated memory\n");
+    printf("\n\tmem_test commands\n\n");
+    printf("\thelp - this message\n\n");
+    printf("\tallocate <word> - allocate <words> of memory\n\n");
+    printf("\tfree - free previously allocated memory\n\n");
     printf("\tread <-i> <address> [<words>] -\n");
-    printf("\tread from <address> for one or <words> [<-i> immediate addressing]\n");
+    printf("\tread from <address> for one or <words> [<-i> immediate addressing]\n\n");
     printf("\twrite <-i> <address> <value>] -\n");
-    printf("\twrite <value> to <address> [<-i> immediate addressing]\n");
+    printf("\twrite <value> to <address> [<-i> immediate addressing]\n\n");
     printf("\tinvert <-i> <address> <words>] -\n");
-    printf("\tinvert bits starting from <address> for <words> [<-i> immediate addressing]\n");
+    printf("\tinvert bits starting from <address> for <words> [<-i> immediate addressing]\n\n");
     printf("\tpattern <-i> <address> <words> [<seed>] -\n");
-    printf("\twrite pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]\n");
+    printf("\twrite pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]\n\n");
     printf("\tverify <-i> <address> <words> [<seed>] -\n");
-    printf("\tverify pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]\n");
-    printf("\texit - exit the program\n");
-    printf("\tNote: Please enter hexadecimal numbers without '0x'\n");
+    printf("\tverify pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]\n\n");
+    printf("\texit - exit the program\n\n");
+    printf("\tNote: Please enter hexadecimal numbers without '0x'\n\n");
 
     return;
   }
