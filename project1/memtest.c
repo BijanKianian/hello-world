@@ -252,7 +252,7 @@ int inputCheck(void)
 						startOffset = offsetCheck(Token[1]);
 						memoryValue = valueCheck(Token[2]);
 
-						if((startOffset == -1) || (memoryValue== 0))
+						if((startOffset == -1) || (memoryValue== -1))
 							return valid;
 
 						write(Block_Address, startOffset, memoryValue);
@@ -265,7 +265,7 @@ int inputCheck(void)
                                 memoryAddress= addressCheck(Token[2], Block_Address_lo);
 								memoryValue = valueCheck(Token[3]);
 
-								if((memoryAddress == 0) || (memoryValue == 0))
+								if((memoryAddress == 0) || (memoryValue == -1))
 									return valid;
                                 startOffset = 0;		/* No offset for immediate addresing */
 
@@ -324,8 +324,9 @@ int inputCheck(void)
 							return valid;
 
 						Seed = seedCheck(Token[3]);
-						if(Seed == 0)
+						if(Seed == -1)
 							return valid;
+
 						pattern_Time( startOffset, numberOfwords,Seed );
 					}
 
@@ -343,6 +344,9 @@ int inputCheck(void)
 
 
 						Seed = seedCheck(Token[4]);
+						if(Seed == -1)
+							return valid;
+
 						pattern_Time( startOffset,  numberOfwords, Seed );
 					}
             }
@@ -361,7 +365,7 @@ int inputCheck(void)
 							return valid;
 
 						Seed = seedCheck(Token[3]);
-						if(Seed == 0)
+						if(Seed == -1)
 							return valid;
 
 						validate( Block_Address,startOffset, numberOfwords,Seed );
@@ -381,7 +385,7 @@ int inputCheck(void)
 
 
 						Seed = seedCheck(Token[4]);
-						if(Seed == 0)
+						if(Seed == -1)
 							return valid;
 
 						validate( Block_Address, startOffset,  numberOfwords, Seed );
@@ -446,7 +450,7 @@ int offsetCheck(char* str)
 int lengthCheck(char* str, int startOffset)
 {
 	int length = atoi (str);       /* Number of locations (words) to display */
-		if(length > (memoryOffsetValue - startOffset))
+		if((length > (memoryOffsetValue - startOffset)) || length <= 0)
 							{
 								printf("Please enter valid length between 1 to %d\n", \
 								memoryOffsetValue-startOffset);
@@ -468,7 +472,7 @@ int valueCheck(char* str)
                                     {
                                         printf("Please enter a valid 32bit hex number for the value\n");
                                         printf("PES_Prj1 >> ");
-                                        return 0;
+                                        return -1;
                                     }
 
                                 int memoryValue = strtol(str, NULL, 16); /* Converting string to hex */
@@ -511,8 +515,8 @@ int addressCheck(char* str1, int Block_Address_lo)
 /**************************************addressCheck [End] ************************************/
 
 /************************************** alloc_test() [Start] *************************************************/
-//	This function tests a the beginnign of each user command for aloocated memory block.
-//        if it is not allocated, an error message will inform the user
+//	This function tests at the beginnign of each user command for aloocated memory block and proper arguments.
+//        if it is not allocated, or address/offset or value are not provided, an error message will inform the user
 
 int alloc_test(char* str0, char* str1, char* str2, char* str3)
 {
@@ -524,22 +528,14 @@ int alloc_test(char* str0, char* str1, char* str2, char* str3)
                         return 0;
                     }
 
-                if (str1== 0 || str2 == 0)     /* No offset/value enterred*/
+                  if (str1== 0 || str2 == 0 || str3 == 0)     /* No offset/value enterred*/
                     {
-                        printf("Please enter a valid starting offset and number of words, or <help> for details\n");
+                        printf("Please enter sufficient parameters for this command, or <help> for details\n");
                         printf("PES_Prj1 >> ");
                         return 0;
                     }
-
-
-				 if (!(strcmp(str0,"pattern")) && str3 == 0)  /* No offset/value enterred*/
-                    {
-                        printf("Please enter a valid starting offset, number of words and seed, or <help> for details\n");
-                        printf("PES_Prj1 >> ");
-                        return 0;
-                    }
-
-	return 1;
+					
+			return 1;
 }
 /************************************** alloc_test() [End] *************************************************/
  /**************************************invert_Time() [Start]************************************************/
@@ -577,16 +573,16 @@ int alloc_test(char* str0, char* str1, char* str2, char* str3)
 			int validInput = strcspn(str,\
 			 "abcdefghijklmnopqrstuvwxyz.ABCDEFGHIJKLMNOPQRSTUVWXYZ,][{}`/+-*"); /* Validating correct int number for Seed*/
 
-			if(validInput < strlen(str) ||(validInput > 10)) /* Check if the number(seed) in larger than 10 digits
-																	 (as in max 32 bit interger = 4,294,967,295)*/
+			if(validInput < strlen(str) ||(validInput > 10))/* Check if the number(seed) in larger than 10 digits
+																	                 (as in max 31 bit interger = 2,147,483,647)*/
 				{
-					printf("Please enter a valid positive number for the 'Seed' value\n");
+					printf("Please enter a positive decimal number for the 'Seed' between 0 and 2,147,483,647\n");
 					printf("PES_Prj1 >> ");
-					return 0;
+					return -1;
 				}
-
 		}
-    int Seed = atoi (str);        /* Converting string to number */
+			int Seed = atoi (str);        /* Converting string to number */
+
 	return Seed;
  }
 /**************************************** seedCheck() [End] *************************************/
