@@ -1,0 +1,462 @@
+Script started on 2019-03-06 11:59:04-0700
+]0;bijan@bijan: ~/ECEN5813_SP19_Project1[01;32mbijan@bijan[00m:[01;34m~/ECEN5813_SP19_Project1[00m$ all[K[K[K./memtest 
+This is a simple program for testing memory.
+Type 'help' for more details or 'exit' to leave the program: 
+PES_Prj1 >> help
+
+	mem_test commands
+
+	help - this message
+
+	allocate <word> - allocate <words> of memory
+
+	free - free previously allocated memory
+
+	read <-i> <address> [<words>] -
+	read from <address> for one or <words> [<-i> immediate addressing]
+
+	write <-i> <address> <value>] -
+	write <value> to <address> [<-i> immediate addressing]
+
+	invert <-i> <address> <words>] -
+	invert bits starting from <address> for <words> [<-i> immediate addressing]
+
+	pattern <-i> <address> <words> [<seed>] -
+	write pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]
+
+	verify <-i> <address> <words> [<seed>] -
+	verify pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]
+
+	exit - exit the program
+
+	Note: Please enter hexadecimal numbers without '0x'
+
+PES_Prj1 >> allocate
+Please enter not more than a valid non-zero offset value w/o any extra, or <help> for details
+PES_Prj1 >> allocate 10
+
+Memory block allocated.
+Address: 0x5620bddf7a80    size: 10   (40 Bytes)
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7a80              0x00000000    0
+ 0x5620bddf7a84              0x00000000    1
+ 0x5620bddf7a88              0x00000000    2
+ 0x5620bddf7a8c              0x00000000    3
+ 0x5620bddf7a90              0x00000000    4
+ 0x5620bddf7a94              0x00000000    5
+ 0x5620bddf7a98              0x00000000    6
+ 0x5620bddf7a9c              0x00000000    7
+ 0x5620bddf7aa0              0x00000000    8
+ 0x5620bddf7aa4              0x00000000    9
+
+PES_Prj1 >> read 0
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> read 0 20
+Please enter valid length between 1 to 10
+PES_Prj1 >> read -i
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> read -i 3
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> read -i 5620bddf7a88
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> read -i 5620bddf7a88 55
+Please enter valid length between 1 to 8
+PES_Prj1 >> read -i 5620bddf7aff 5
+Please enter the starting memory address between 0x5620bddf7a80 and 0x5620bddf7aa4
+PES_Prj1 >> read -i 5620bddf7a88 5
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7a88              0x00000000    0
+ 0x5620bddf7a8c              0x00000000    1
+ 0x5620bddf7a90              0x00000000    2
+ 0x5620bddf7a94              0x00000000    3
+ 0x5620bddf7a98              0x00000000    4
+
+PES_Prj1 >> write 
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> write 2
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> wrtie 2 aaabbb
+Invalid input, please try again: 
+PES_Prj1 >> write 2 aaabbb
+ Value: aaabbb written at address: 0x5620bddf7a88
+
+PES_Prj1 >> read 0 10
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7a80              0x00000000    0
+ 0x5620bddf7a84              0x00000000    1
+ 0x5620bddf7a88              0x00aaabbb    2
+ 0x5620bddf7a8c              0x00000000    3
+ 0x5620bddf7a90              0x00000000    4
+ 0x5620bddf7a94              0x00000000    5
+ 0x5620bddf7a98              0x00000000    6
+ 0x5620bddf7a9c              0x00000000    7
+ 0x5620bddf7aa0              0x00000000    8
+ 0x5620bddf7aa4              0x00000000    9
+
+PES_Prj1 >> write -i
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> write -i 5620bddf7a88
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> write -i 5620bddf7a88 ffffffffffffff
+Please enter a valid 32bit hex number for the value
+PES_Prj1 >> write -i 5620bddf7a88 12345678
+ Value: 12345678 written at address: 0x5620bddf7a88
+
+PES_Prj1 >> read 0 10
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7a80              0x00000000    0
+ 0x5620bddf7a84              0x00000000    1
+ 0x5620bddf7a88              0x12345678    2
+ 0x5620bddf7a8c              0x00000000    3
+ 0x5620bddf7a90              0x00000000    4
+ 0x5620bddf7a94              0x00000000    5
+ 0x5620bddf7a98              0x00000000    6
+ 0x5620bddf7a9c              0x00000000    7
+ 0x5620bddf7aa0              0x00000000    8
+ 0x5620bddf7aa4              0x00000000    9
+
+PES_Prj1 >> invert
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> invert 2
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> invert 3 4
+Invert function execution time is milli: 0.006000sec.
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7a80              0x00000000    0
+ 0x5620bddf7a84              0x00000000    1
+ 0x5620bddf7a88              0x12345678    2
+ 0x5620bddf7a8c              0xffffffff    3
+ 0x5620bddf7a90              0xffffffff    4
+ 0x5620bddf7a94              0xffffffff    5
+ 0x5620bddf7a98              0xffffffff    6
+ 0x5620bddf7a9c              0x00000000    7
+ 0x5620bddf7aa0              0x00000000    8
+ 0x5620bddf7aa4              0x00000000    9
+
+PES_Prj1 >> invert 3 10
+Please enter valid length between 1 to 7
+PES_Prj1 >> invert   5
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> invert -i
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> invert -i 4554
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> invert -i 65468 3
+Please enter a valid hex number for the memory address
+PES_Prj1 >> invert 5620bddf7a88
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> invert -i 5620bddf7a88
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> invert -i 5620bddf7a88 10
+Please enter valid length between 1 to 3
+PES_Prj1 >> invert -i 5620bddf7a88 3
+Invert function execution time is milli: 0.005000sec.
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7a80              0x00000000    0
+ 0x5620bddf7a84              0x00000000    1
+ 0x5620bddf7a88              0x12345678    2
+ 0x5620bddf7a8c              0xffffffff    3
+ 0x5620bddf7a90              0xffffffff    4
+ 0x5620bddf7a94              0xffffffff    5
+ 0x5620bddf7a98              0xffffffff    6
+ 0x5620bddf7a9c              0xffffffff    7
+ 0x5620bddf7aa0              0xffffffff    8
+ 0x5620bddf7aa4              0xffffffff    9
+
+PES_Prj1 >> allocate 10
+
+Memory is current allocated in address 0x0x5620bddf7a80
+
+Do you wish to override this data? (Y?) 
+PES_Prj1 >> n
+
+Memory allocated remains in address 0x0x5620bddf7a80
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7a80              0x00000000    0
+ 0x5620bddf7a84              0x00000000    1
+ 0x5620bddf7a88              0x12345678    2
+ 0x5620bddf7a8c              0xffffffff    3
+ 0x5620bddf7a90              0xffffffff    4
+ 0x5620bddf7a94              0xffffffff    5
+ 0x5620bddf7a98              0xffffffff    6
+ 0x5620bddf7a9c              0xffffffff    7
+ 0x5620bddf7aa0              0xffffffff    8
+ 0x5620bddf7aa4              0xffffffff    9
+
+PES_Prj1 >> allocate 10
+
+Memory is current allocated in address 0x0x5620bddf7a80
+
+Do you wish to override this data? (Y?) 
+PES_Prj1 >> y
+ 40 Bytes of heap released from address 0x5620bddf7a80 to 0x5620bddf7aa8
+
+Memory block allocated.
+Address: 0x5620bddf7ab0    size: 10   (40 Bytes)
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7ab0              0x00000000    0
+ 0x5620bddf7ab4              0x00000000    1
+ 0x5620bddf7ab8              0x00000000    2
+ 0x5620bddf7abc              0x00000000    3
+ 0x5620bddf7ac0              0x00000000    4
+ 0x5620bddf7ac4              0x00000000    5
+ 0x5620bddf7ac8              0x00000000    6
+ 0x5620bddf7acc              0x00000000    7
+ 0x5620bddf7ad0              0x00000000    8
+ 0x5620bddf7ad4              0x00000000    9
+
+PES_Prj1 >> pattern
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern 2
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern 2 3
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern 2 3 1
+
+	##########################
+	#     Random numbers     #
+	##########################
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7ab8              0x3c88596c    0
+ 0x5620bddf7abc              0x5e8885db    1
+ 0x5620bddf7ac0              0x8116017e    2
+
+PES_Prj1 >> Pattern function execution time is milli: 0.057000sec.
+Enter another command 
+
+PES_Prj1 >> pattern -i
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern -i errg434
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern -i 5620bddf7a88 
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern -i 5620bddf7ac8 10
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern -i 5620bddf7ac8 10 1
+Please enter valid length between 1 to 4
+PES_Prj1 >> pattern -i 5620bddf7ac8 3
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern -i 5620bddf7ac8 3 1
+
+	##########################
+	#     Random numbers     #
+	##########################
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7ac8              0x3c88596c    0
+ 0x5620bddf7acc              0x5e8885db    1
+ 0x5620bddf7ad0              0x8116017e    2
+
+PES_Prj1 >> Pattern function execution time is milli: 0.065000sec.
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7ab0              0x00000000    0
+ 0x5620bddf7ab4              0x00000000    1
+ 0x5620bddf7ab8              0x3c88596c    2
+ 0x5620bddf7abc              0x5e8885db    3
+ 0x5620bddf7ac0              0x8116017e    4
+ 0x5620bddf7ac4              0x00000000    5
+ 0x5620bddf7ac8              0x3c88596c    6
+ 0x5620bddf7acc              0x5e8885db    7
+ 0x5620bddf7ad0              0x8116017e    8
+ 0x5620bddf7ad4              0x00000000    9
+
+PES_Prj1 >> free
+ 40 Bytes of heap released from address 0x5620bddf7ab0 to 0x5620bddf7ad4
+
+Enter another command 
+
+PES_Prj1 >> allocate 0 10
+Please enter not more than a valid non-zero offset value w/o any extra, or <help> for details
+PES_Prj1 >> read 0 10
+Memory is not allocated yet!
+
+PES_Prj1 >> allocate 10
+
+Memory block allocated.
+Address: 0x5620bddf7ae0    size: 10   (40 Bytes)
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7ae0              0x00000000    0
+ 0x5620bddf7ae4              0x00000000    1
+ 0x5620bddf7ae8              0x00000000    2
+ 0x5620bddf7aec              0x00000000    3
+ 0x5620bddf7af0              0x00000000    4
+ 0x5620bddf7af4              0x00000000    5
+ 0x5620bddf7af8              0x00000000    6
+ 0x5620bddf7afc              0x00000000    7
+ 0x5620bddf7b00              0x00000000    8
+ 0x5620bddf7b04              0x00000000    9
+
+PES_Prj1 >> verify
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> verify 0
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> verify 0 3
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> verify 0 3 1
+
+	##########################
+	#     Random numbers     #
+	##########################
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7ae0              0x3c88596c    0
+ 0x5620bddf7ae4              0x5e8885db    1
+ 0x5620bddf7ae8              0x8116017e    2
+
+PES_Prj1 >> The expected and actual values are identical!
+Pattern function execution time is milli: 0.004000sec.
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7ae0              0x3c88596c    0
+ 0x5620bddf7ae4              0x5e8885db    1
+ 0x5620bddf7ae8              0x8116017e    2
+ 0x5620bddf7aec              0x00000000    3
+ 0x5620bddf7af0              0x00000000    4
+ 0x5620bddf7af4              0x00000000    5
+ 0x5620bddf7af8              0x00000000    6
+ 0x5620bddf7afc              0x00000000    7
+ 0x5620bddf7b00              0x00000000    8
+ 0x5620bddf7b04              0x00000000    9
+
+PES_Prj1 >> verify -i
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> verify -i 455trg
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> verify -i 5620bddf7aec
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> verify -i 5620bddf7aec 12
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> verify -i 5620bddf7aec 12 1
+Please enter valid length between 1 to 7
+PES_Prj1 >> verify -i 5620bddf7aec 3 2
+
+	##########################
+	#     Random numbers     #
+	##########################
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7aec              0x3ca1bf79    0
+ 0x5620bddf7af0              0x75c0e284    1
+ 0x5620bddf7af4              0x305f0c13    2
+
+PES_Prj1 >> The expected and actual values are identical!
+Pattern function execution time is milli: 0.004000sec.
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7ae0              0x3c88596c    0
+ 0x5620bddf7ae4              0x5e8885db    1
+ 0x5620bddf7ae8              0x8116017e    2
+ 0x5620bddf7aec              0x3ca1bf79    3
+ 0x5620bddf7af0              0x75c0e284    4
+ 0x5620bddf7af4              0x305f0c13    5
+ 0x5620bddf7af8              0x00000000    6
+ 0x5620bddf7afc              0x00000000    7
+ 0x5620bddf7b00              0x00000000    8
+ 0x5620bddf7b04              0x00000000    9
+
+PES_Prj1 >> verify 0 10 5
+
+	##########################
+	#     Random numbers     #
+	##########################
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7ae0              0x3cedf1a0    0
+ 0x5620bddf7ae4              0xbb69f87f    1
+ 0x5620bddf7ae8              0x3e3a2bd2    2
+ 0x5620bddf7aec              0xda5ad909    3
+ 0x5620bddf7af0              0xb7668ed4    4
+ 0x5620bddf7af4              0x5c40ac23    5
+ 0x5620bddf7af8              0x7fb8a326    6
+ 0x5620bddf7afc              0x3886604d    7
+ 0x5620bddf7b00              0x0d258548    8
+ 0x5620bddf7b04              0xde796807    9
+
+PES_Prj1 >> The expected and actual values are identical!
+Pattern function execution time is milli: 0.004000sec.
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+   Address                     Value 	 Index
+  ------------               ----------	 ------
+ 0x5620bddf7ae0              0x3cedf1a0    0
+ 0x5620bddf7ae4              0xbb69f87f    1
+ 0x5620bddf7ae8              0x3e3a2bd2    2
+ 0x5620bddf7aec              0xda5ad909    3
+ 0x5620bddf7af0              0xb7668ed4    4
+ 0x5620bddf7af4              0x5c40ac23    5
+ 0x5620bddf7af8              0x7fb8a326    6
+ 0x5620bddf7afc              0x3886604d    7
+ 0x5620bddf7b00              0x0d258548    8
+ 0x5620bddf7b04              0xde796807    9
+
+PES_Prj1 >> free
+Null pointer was provided. Previous released memory: 
+ 40 Bytes of heap released from address 0x5620bddf7ae0 to 0x5620bddf7b04
+
+Enter another command 
+
+PES_Prj1 >> exit
+
+Good Bye!
+
+]0;bijan@bijan: ~/ECEN5813_SP19_Project1[01;32mbijan@bijan[00m:[01;34m~/ECEN5813_SP19_Project1[00m$ exit
+exit
+
+Script done on 2019-03-06 12:14:02-0700

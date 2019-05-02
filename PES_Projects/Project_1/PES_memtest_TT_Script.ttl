@@ -1,0 +1,209 @@
+sendln "help"
+	; wait for 500 milliseconds.
+	mpause 500
+sendln "allocate 5"
+	mpause 500
+sendln "read 0 5"
+	mpause 500
+sendln "free"
+	mpause 500
+sendln "allocate 2"
+	mpause 500
+sendln "allocate 6"
+	mpause 500
+sendln "Y"
+	mpause 500
+sendln "read 0 6"
+	mpause 500
+sendln "write 0 1111ffff"
+	mpause 500
+sendln "write 1 2222dddd"
+	mpause 500
+sendln "write 3 3333eeee"
+	mpause 500
+sendln "write 6 bbbb7777"
+	mpause 500
+sendln "read 0 6"
+	mpause 500
+sendln "invert 0 6"
+	mpause 500
+sendln "read 0 6"
+	mpause 500
+sendln "free"
+	mpause 500
+sendln "free"
+	mpause 500
+sendln "allocate 1"
+	mpause 500
+sendln "allocate 5"
+	mpause 500
+sendln "no"
+	mpause 500
+ 
+ 	mpause 500
+sendln "free"
+	mpause 500
+	
+; Second round of commands
+	
+	
+sendln "allocate 10"
+	mpause 500
+		
+ sendln "read 0"
+	mpause 500
+sendln "read 0 20"
+	mpause 500
+sendln "read -i"
+	mpause 500
+sendln "read -i 3"
+	mpause 500
+sendln "read -i 1ffff460"
+	mpause 500
+sendln "read -i 1ffff460 55"
+	mpause 500
+sendln "read -i 1ffff1ff 5"
+	mpause 500
+sendln "read -i 1ffff461 5"
+	mpause 500
+ 
+
+sendln "write"
+	mpause 500
+sendln "write 2"
+	mpause 500
+sendln "write 2 3 aaabbb"
+	mpause 500
+sendln "write 2 aaabbb"
+	mpause 500
+sendln "write 5 ffffffff"
+	mpause 500
+sendln "read 0 10"
+	mpause 500
+		mpause 500
+sendln "write -i"
+	mpause 500
+sendln "write -i 1ffff50c"
+	mpause 500
+sendln "write -i 1ffff50c ffffffffffffff"
+	mpause 500
+sendln "write -i 1ffff50c 12345678"
+	mpause 500
+sendln "write -i 1ffff50c ffffffff"
+	mpause 500	
+sendln "write -i 1ffff50d ffffffff"
+	mpause 500
+sendln "read 0 10"
+
+ 	mpause 500
+sendln "invert"
+	mpause 500
+sendln "invert 2"
+	mpause 500
+sendln "invert 3 4"
+	mpause 500
+sendln "read 0 10"
+	mpause 500
+sendln "invert 3 10"
+	mpause 500
+sendln "invert 5"
+	mpause 500
+sendln "invert -i"
+	mpause 500
+sendln "invert -i 4554"
+	mpause 500
+sendln "invert -i 65468 3"
+	mpause 500
+sendln "invert 1ffff50c"
+	mpause 500
+sendln "invert -i 1ffff50c"
+	mpause 500
+sendln "invert -i 1ffff50c 10"
+	mpause 500
+sendln "invert -i 1ffff50c 3"
+	mpause 500
+sendln "invert -i 1ffff1cb 3"
+	mpause 500
+sendln "read 0 10"
+	mpause 500
+  
+  	mpause 500
+sendln "allocate 10"
+	mpause 500
+sendln "n"
+	mpause 500
+sendln "read 0 10"
+	mpause 500
+sendln "allocate 10"
+	mpause 500
+sendln "y"
+	mpause 500
+sendln "read 0 10"
+	mpause 500
+ 
+sendln "pattern"
+	mpause 500	
+sendln "pattern 2"
+	mpause 500
+sendln "pattern 2 3"
+	mpause 500
+sendln "pattern 2 3 1"
+	mpause 500
+sendln "pattern -i"
+	mpause 500
+					
+sendln "pattern -i errg434"
+	mpause 500
+sendln "pattern -i 1ffff50c"
+	mpause 500
+		mpause 500
+sendln "pattern -i 1ffff1e0 10"
+	mpause 500
+sendln "pattern -i 1ffff1e0 10 1"
+	mpause 500
+		mpause 500
+sendln "pattern -i 1ffff1e0 3"
+	mpause 500
+sendln "pattern -i 1ffff1e0 3 1"
+	mpause 500
+		
+sendln "read 0 10"
+	mpause 500
+sendln "free"
+	mpause 500
+sendln "allocate 10"
+	mpause 500	
+sendln "read 0 10	
+
+	mpause 500
+sendln "verify"
+	mpause 500
+sendln "verify 0"
+	mpause 500
+sendln "verify 0 3"
+	mpause 500
+sendln "verify 0 3 1"
+	mpause 500
+sendln "read 0 10"
+	mpause 500
+sendln "verify -i"
+	mpause 500
+sendln "verify -i 455trg"
+	mpause 500
+sendln "verify -i 1ffff1d4"
+	mpause 500
+sendln "verify -i 1ffff1d4 12"
+	mpause 500
+sendln "verify -i 1ffff1d4 12 1"
+	mpause 500	
+sendln "verify -i 1ffff1d4 3 2"
+	mpause 500
+sendln "read 0 10"
+	mpause 500	
+sendln "verify 0 10 5"
+	mpause 500
+sendln "read 0 10"
+	mpause 500
+sendln "free"
+	mpause 500
+sendln "exit"

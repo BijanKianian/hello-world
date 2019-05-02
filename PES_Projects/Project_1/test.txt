@@ -1,0 +1,101 @@
+
+help
+allocate 5
+read 0 5
+free
+allocate 2
+allocate 6
+Y
+read 0 6
+write 0 1111ffff
+write 1 2222dddd
+write 3 3333eeee
+write 6 bbbb7777
+read 0 6
+invert 0 6
+read 0 6
+free
+free
+allocate 1
+allocate 5
+no
+free
+allocate 10
+read 0
+read 0 20
+read -i
+read -i 3
+read -i 5620bddf7a88
+read -i 5620bddf7a88 55
+read -i 5620bddf7aff 5
+read -i 5620bddf7a88 5
+
+write
+write 2
+write 2 3 aaabbb
+write 2 aaabbb
+read 0 10
+write -i
+write -i 5620bddf7a88
+write -i 5620bddf7a88 ffffffffffffff
+write -i 5620bddf7a88 12345678
+read 0 10
+
+invert
+invert 2
+invert 3 4
+read 0 10
+invert 3 10
+invert 5
+invert -i
+invert -i 4554
+invert -i 65468 3
+invert 5620bddf7a88
+invert -i 5620bddf7a88
+invert -i 5620bddf7a88 10
+invert -i 5620bddf7a88 3
+read 0 10
+ 
+allocate 10
+n
+read 0 10
+allocate 10
+y
+read 0 10
+
+pattern
+pattern 2
+pattern 2 3
+pattern 2 3 1
+pattern -i
+pattern -i errg434
+pattern -i 5620bddf7a88
+pattern -i 5620bddf7ac8 10
+pattern -i 5620bddf7ac8 10 1
+pattern -i 5620bddf7ac8 3
+pattern -i 5620bddf7ac8 3 1
+read 0 10
+
+free
+allocate 10
+read 0 10
+pattern 0 10 5
+verify
+verify 0
+verify 0 3
+verify 0 3 1
+read 0 10
+verify -i 
+verify -i 455trg
+verify -i 5620bddf7aec
+verify -i 5620bddf7aec 12
+verify -i 5620bddf7aec 12 1
+verify -i 5620bddf7aec 3 2
+read 0 10
+verify 0 10 5
+read 0 10
+invert 0 1
+verify 0 10 5
+read 0 10
+free
+exit

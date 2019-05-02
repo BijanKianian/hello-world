@@ -1,0 +1,534 @@
+help
+
+	mem_test commands
+
+	help - this message
+
+	allocate <word> - allocate <words> of memory
+
+	free - free previously allocated memory
+
+	read <-i> <address> [<words>] -
+	read from <address> for one or <words> [<-i> immediate addressing]
+
+	write <-i> <address> <value>] -
+	write <value> to <address> [<-i> immediate addressing]
+
+	invert <-i> <address> <words>] -
+	invert bits starting from <address> for <words> [<-i> immediate addressing]
+
+	pattern <-i> <address> <words> [<seed>] -
+	write pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]
+
+	verify <-i> <address> <words> [<seed>] -
+	verify pseudorandom pattern at <address> for <words> using <seed> [<-i> immediate addressing]
+
+	exit - exit the program
+
+	Note: Please enter hexadecimal numbers without '0x'
+
+PES_Prj1 >> allocate 5
+
+Memory block allocated.
+Address: 0x1ffff4c8    size: 5   (20 Bytes)
+Enter another command 
+
+PES_Prj1 >> read 0 5
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff4c8              0x00000000    0
+ 0x1ffff4cc              0x00000000    1
+ 0x1ffff4d0              0x00000000    2
+ 0x1ffff4d4              0x00000000    3
+ 0x1ffff4d8              0x00000000    4
+
+PES_Prj1 >> free
+ 20 Bytes of heap released from address 0x1ffff4c8 to 0x1ffff4d8
+
+Enter another command 
+
+PES_Prj1 >> allocate 2
+
+Memory block allocated.
+Address: 0x1ffff4d0    size: 2   (8 Bytes)
+Enter another command 
+
+PES_Prj1 >> allocate 6
+
+Memory is current allocated in address 0x0x1ffff4d0
+
+Do you wish to override this data? (Y?) 
+PES_Prj1 >> Y
+ 8 Bytes of heap released from address 0x1ffff4d0 to 0x1ffff4d4
+
+Memory block allocated.
+Address: 0x1ffff4e0    size: 6   (24 Bytes)
+Enter another command 
+
+PES_Prj1 >> read 0 6
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff4e0              0x00000000    0
+ 0x1ffff4e4              0x00000000    1
+ 0x1ffff4e8              0x00000000    2
+ 0x1ffff4ec              0x00000000    3
+ 0x1ffff4f0              0x00000000    4
+ 0x1ffff4f4              0x00000000    5
+
+PES_Prj1 >> write 0 1111ffff
+ Value: 1111ffff written at address: 0x1ffff4e0
+
+PES_Prj1 >> write 1 2222dddd
+ Value: 2222dddd written at address: 0x1ffff4e4
+
+PES_Prj1 >> write 3 3333eeee
+ Value: 3333eeee written at address: 0x1ffff4ec
+
+PES_Prj1 >> write 6 bbbb7777
+Please enter valid offset between 0 to 5
+PES_Prj1 >> read 0 6
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff4e0              0x1111ffff    0
+ 0x1ffff4e4              0x2222dddd    1
+ 0x1ffff4e8              0x00000000    2
+ 0x1ffff4ec              0x3333eeee    3
+ 0x1ffff4f0              0x00000000    4
+ 0x1ffff4f4              0x00000000    5
+
+PES_Prj1 >> invert 0 6
+Invert function execution time is 111 microseconds
+Enter another command 
+
+PES_Prj1 >> read 0 6
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff4e0              0xeeee0000    0
+ 0x1ffff4e4              0xdddd2222    1
+ 0x1ffff4e8              0xffffffff    2
+ 0x1ffff4ec              0xcccc1111    3
+ 0x1ffff4f0              0xffffffff    4
+ 0x1ffff4f4              0xffffffff    5
+
+PES_Prj1 >> free
+Null pointer was provided. Previous released memory: 
+ 24 Bytes of heap released from address 0x1ffff4e0 to 0x1ffff4f4
+
+Enter another command 
+
+PES_Prj1 >> free
+Memory is not allocated yet!
+Enter another command 
+
+PES_Prj1 >> allocate 1
+
+Memory block allocated.
+Address: 0x1ffff4d8    size: 1   (4 Bytes)
+Enter another command 
+
+PES_Prj1 >> allocate 5
+
+Memory is current allocated in address 0x0x1ffff4d8
+
+Do you wish to override this data? (Y?) 
+PES_Prj1 >> no
+
+Memory allocated remains in address 0x0x1ffff4d8
+Enter another command 
+
+PES_Prj1 >> free
+ 4 Bytes of heap released from address 0x1ffff4d8 to 0x1ffff4d8
+
+Enter another command 
+
+PES_Prj1 >> allocate 10
+Memory block allocated.
+Address: 0x1ffff500    size: 10   (40 Bytes)
+
+Enter another command 
+
+PES_Prj1 >> read 0
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> read 0 20
+Please enter valid length between 1 to 10
+PES_Prj1 >> read -i
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> read -i 3
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> read -i value
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> read -i 1ffff50c 55
+Please enter valid length between 1 to 7
+PES_Prj1 >> read -i 1ffff1ff 5
+Please enter the starting memory address between 0x1ffff500 and 0x1ffff524
+PES_Prj1 >> read -i 1ffff50c 5
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff50c              0x00000000    0
+ 0x1ffff510              0x00000000    1
+ 0x1ffff514              0x00000000    2
+ 0x1ffff518              0x00000000    3
+ 0x1ffff51c              0x00000000    4
+
+PES_Prj1 >> write
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> write 2
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> write 2 3 aaabbb
+ Value: 3 written at address: 0x1ffff508
+
+PES_Prj1 >> write 2 aaabbb
+ Value: aaabbb written at address: 0x1ffff508
+
+PES_Prj1 >> write 5 ffffffff
+ Value: ffffffff written at address: 0x1ffff514
+
+PES_Prj1 >> read 0 10
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff500              0x00000000    0
+ 0x1ffff504              0x00000000    1
+ 0x1ffff508              0x00aaabbb    2
+ 0x1ffff50c              0x00000000    3
+ 0x1ffff510              0x00000000    4
+ 0x1ffff514              0xffffffff    5
+ 0x1ffff518              0x00000000    6
+ 0x1ffff51c              0x00000000    7
+ 0x1ffff520              0x00000000    8
+ 0x1ffff524              0x00000000    9
+
+PES_Prj1 >> write -i
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> write -i 1ffff50c
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> write -i 1ffff50c ffffffffffffff
+Please enter a valid 32bit hex number for the value
+PES_Prj1 >> write -i 1ffff50c 12345678
+ Value: 12345678 written at address: 0x1ffff50c
+
+PES_Prj1 >> write -i 1ffff50c ffffffff
+ Value: ffffffff written at address: 0x1ffff50c
+
+PES_Prj1 >> write -i 1ffff50d ffffffff
+Invalid address, did you mean: 0x1ffff50c or 0x1ffff510 ?
+PES_Prj1 >> read 0 10
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff500              0x00000000    0
+ 0x1ffff504              0x00000000    1
+ 0x1ffff508              0x00aaabbb    2
+ 0x1ffff50c              0xffffffff    3
+ 0x1ffff510              0x00000000    4
+ 0x1ffff514              0xffffffff    5
+ 0x1ffff518              0x00000000    6
+ 0x1ffff51c              0x00000000    7
+ 0x1ffff520              0x00000000    8
+ 0x1ffff524              0x00000000    9
+
+PES_Prj1 >> invert
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> invert 2
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> invert 3 4
+Invert function execution time is 74319 nanoseconds
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff500              0x00000000    0
+ 0x1ffff504              0x00000000    1
+ 0x1ffff508              0x00aaabbb    2
+ 0x1ffff50c              0x00000000    3
+ 0x1ffff510              0xffffffff    4
+ 0x1ffff514              0x00000000    5
+ 0x1ffff518              0xffffffff    6
+ 0x1ffff51c              0x00000000    7
+ 0x1ffff520              0x00000000    8
+ 0x1ffff524              0x00000000    9
+
+PES_Prj1 >> invert 3 10
+Please enter valid length between 1 to 7
+PES_Prj1 >> invert 5
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> invert -i
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> invert -i 4554
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> invert -i 65468 3
+Please enter a valid hex number for the memory address
+PES_Prj1 >> invert 1ffff50c
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> invert -i 1ffff50c
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> invert -i 1ffff50c 10
+Please enter valid length between 1 to 7
+PES_Prj1 >> invert -i 1ffff50c 3
+Invert function execution time is 55944 nanoseconds
+Enter another command 
+
+PES_Prj1 >> invert -i 1ffff1cb 3
+Please enter the starting memory address between 0x1ffff500 and 0x1ffff524
+PES_Prj1 >> read 0 10
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff500              0x00000000    0
+ 0x1ffff504              0x00000000    1
+ 0x1ffff508              0x00aaabbb    2
+ 0x1ffff50c              0xffffffff    3
+ 0x1ffff510              0x00000000    4
+ 0x1ffff514              0xffffffff    5
+ 0x1ffff518              0xffffffff    6
+ 0x1ffff51c              0x00000000    7
+ 0x1ffff520              0x00000000    8
+ 0x1ffff524              0x00000000    9
+
+PES_Prj1 >> allocate 10
+
+Memory is current allocated in address 0x0x1ffff500
+
+Do you wish to override this data? (Y?) 
+PES_Prj1 >> n
+
+Memory allocated remains in address 0x0x1ffff500
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff500              0x00000000    0
+ 0x1ffff504              0x00000000    1
+ 0x1ffff508              0x00aaabbb    2
+ 0x1ffff50c              0xffffffff    3
+ 0x1ffff510              0x00000000    4
+ 0x1ffff514              0xffffffff    5
+ 0x1ffff518              0xffffffff    6
+ 0x1ffff51c              0x00000000    7
+ 0x1ffff520              0x00000000    8
+ 0x1ffff524              0x00000000    9
+
+PES_Prj1 >> allocate 10
+
+Memory is current allocated in address 0x0x1ffff500
+
+Do you wish to override this data? (Y?) 
+PES_Prj1 >> y
+ 40 Bytes of heap released from address 0x1ffff500 to 0x1ffff524
+
+Memory block allocated.
+Address: 0x1ffff500    size: 10   (40 Bytes)
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff500              0x00000000    0
+ 0x1ffff504              0x00000000    1
+ 0x1ffff508              0x00000000    2
+ 0x1ffff50c              0x00000000    3
+ 0x1ffff510              0x00000000    4
+ 0x1ffff514              0x00000000    5
+ 0x1ffff518              0x00000000    6
+ 0x1ffff51c              0x00000000    7
+ 0x1ffff520              0x00000000    8
+ 0x1ffff524              0x00000000    9
+
+PES_Prj1 >> pattern
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern 2
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern 2 3
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern 2 3 1
+
+	##########################
+	#     Random numbers     #
+	##########################
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff508              0x3c88596c    0
+ 0x1ffff50c              0x5e8885db    1
+ 0x1ffff510              0x8116017e    2
+
+PES_Prj1 >> Pattern function execution time is 27857 microseconds
+Enter another command 
+
+PES_Prj1 >> pattern -i
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern -i errg434
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern -i 1ffff50c
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern -i 1ffff1e0 10
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern -i 1ffff1e0 10 1
+Please enter the starting memory address between 0x1ffff500 and 0x1ffff524
+PES_Prj1 >> pattern -i 1ffff1e0 3
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> pattern -i 1ffff1e0 3 1
+Please enter the starting memory address between 0x1ffff500 and 0x1ffff524
+PES_Prj1 >> read 0 10
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff500              0x00000000    0
+ 0x1ffff504              0x00000000    1
+ 0x1ffff508              0x3c88596c    2
+ 0x1ffff50c              0x5e8885db    3
+ 0x1ffff510              0x8116017e    4
+ 0x1ffff514              0x00000000    5
+ 0x1ffff518              0x00000000    6
+ 0x1ffff51c              0x00000000    7
+ 0x1ffff520              0x00000000    8
+ 0x1ffff524              0x00000000    9
+
+PES_Prj1 >> free
+ 40 Bytes of heap released from address 0x1ffff500 to 0x1ffff524
+
+Enter another command 
+
+PES_Prj1 >> allocate 10
+
+Memory block allocated.
+Address: 0x1ffff500    size: 10   (40 Bytes)
+Enter another command 
+
+PES_Prj1 >> read 0 10	
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff500              0x00000000    0
+ 0x1ffff504              0x00000000    1
+ 0x1ffff508              0x00000000    2
+ 0x1ffff50c              0x00000000    3
+ 0x1ffff510              0x00000000    4
+ 0x1ffff514              0x00000000    5
+ 0x1ffff518              0x00000000    6
+ 0x1ffff51c              0x00000000    7
+ 0x1ffff520              0x00000000    8
+ 0x1ffff524              0x00000000    9
+
+PES_Prj1 >> verify
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> verify 0
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> verify 0 3
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> verify 0 3 1
+
+	##########################
+	#     Random numbers     #
+	##########################
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff500              0x3c88596c    0
+ 0x1ffff504              0x5e8885db    1
+ 0x1ffff508              0x8116017e    2
+
+PES_Prj1 >> Verify function execution time is 4053 nanoseconds
+The expected and actual values are identical!
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff500              0x3c88596c    0
+ 0x1ffff504              0x5e8885db    1
+ 0x1ffff508              0x8116017e    2
+ 0x1ffff50c              0x00000000    3
+ 0x1ffff510              0x00000000    4
+ 0x1ffff514              0x00000000    5
+ 0x1ffff518              0x00000000    6
+ 0x1ffff51c              0x00000000    7
+ 0x1ffff520              0x00000000    8
+ 0x1ffff524              0x00000000    9
+
+PES_Prj1 >> verify -i
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> verify -i 455trg
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> verify -i 1ffff1d4
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> verify -i 1ffff1d4 12
+Please enter sufficient parameters for this command, or <help> for details
+PES_Prj1 >> verify -i 1ffff1d4 12 1
+Please enter the starting memory address between 0x1ffff500 and 0x1ffff524
+PES_Prj1 >> verify -i 1ffff1d4 3 2
+Please enter the starting memory address between 0x1ffff500 and 0x1ffff524
+PES_Prj1 >> read 0 10
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff500              0x3c88596c    0
+ 0x1ffff504              0x5e8885db    1
+ 0x1ffff508              0x8116017e    2
+ 0x1ffff50c              0x00000000    3
+ 0x1ffff510              0x00000000    4
+ 0x1ffff514              0x00000000    5
+ 0x1ffff518              0x00000000    6
+ 0x1ffff51c              0x00000000    7
+ 0x1ffff520              0x00000000    8
+ 0x1ffff524              0x00000000    9
+
+PES_Prj1 >> verify 0 10 5
+
+	##########################
+	#     Random numbers     #
+	##########################
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff500              0x3cedf1a0    0
+ 0x1ffff504              0xbb69f87f    1
+ 0x1ffff508              0x3e3a2bd2    2
+ 0x1ffff50c              0xda5ad909    3
+ 0x1ffff510              0xb7668ed4    4
+ 0x1ffff514              0x5c40ac23    5
+ 0x1ffff518              0x7fb8a326    6
+ 0x1ffff51c              0x3886604d    7
+ 0x1ffff520              0x0d258548    8
+ 0x1ffff524              0xde796807    9
+
+PES_Prj1 >> Verify function execution time is 15078 nanoseconds
+The expected and actual values are identical!
+Enter another command 
+
+PES_Prj1 >> read 0 10
+
+ Address                   Value     Index
+------------             ----------  ------
+ 0x1ffff500              0x3cedf1a0    0
+ 0x1ffff504              0xbb69f87f    1
+ 0x1ffff508              0x3e3a2bd2    2
+ 0x1ffff50c              0xda5ad909    3
+ 0x1ffff510              0xb7668ed4    4
+ 0x1ffff514              0x5c40ac23    5
+ 0x1ffff518              0x7fb8a326    6
+ 0x1ffff51c              0x3886604d    7
+ 0x1ffff520              0x0d258548    8
+ 0x1ffff524              0xde796807    9
+
+PES_Prj1 >> free
+Null pointer was provided. Previous released memory: 
+ 40 Bytes of heap released from address 0x1ffff500 to 0x1ffff524
+
+Enter another command 
+
+PES_Prj1 >> exit
+
+Good Bye!
+
