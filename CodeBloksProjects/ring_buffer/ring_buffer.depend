@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1553441325 source:/home/bijan/hello-world/project2/ring_buffer.c
+	"ring_buffer.h"
+
+1553400715 /home/bijan/hello-world/project2/ring_buffer.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdint.h>
+

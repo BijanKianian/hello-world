@@ -1,0 +1,103 @@
+# depslib dependency file v1.0
+1550872559 source:/home/bijan/ECEN5813_SP19_Project1/memtest.c
+	"memtest.h"
+
+1550791403 /home/bijan/ECEN5813_SP19_Project1/memtest.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+
+1550791403 source:/home/bijan/ECEN5813_SP19_Project1/allocate.c
+	"memtest.h"
+
+1550791403 source:/home/bijan/ECEN5813_SP19_Project1/free.c
+	"memtest.h"
+
+1550791403 source:/home/bijan/ECEN5813_SP19_Project1/help.c
+	"memtest.h"
+
+1552159005 source:/home/bijan/hello-world/project1/memtest.c
+	"memtest.h"
+
+1552031125 /home/bijan/hello-world/project1/memtest.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	"systick.h"
+	<time.h>
+	"allocate.h"
+	"display.h"
+	"free.h"
+	"help.h"
+	"invert.h"
+	"write.h"
+	"pattern.h"
+	"verify.h"
+
+1552062554 source:/home/bijan/hello-world/project1/allocate.c
+	"memtest.h"
+	"allocate.h"
+
+1552062554 source:/home/bijan/hello-world/project1/display.c
+	"memtest.h"
+	"display.h"
+
+1552062554 source:/home/bijan/hello-world/project1/free.c
+	"memtest.h"
+	"free.h"
+
+1552062554 source:/home/bijan/hello-world/project1/help.c
+	"memtest.h"
+	"help.h"
+
+1551115822 source:/home/bijan/hello-world/project1/memtest.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<time.h>
+	"allocate.h"
+	"display.h"
+	"free.h"
+	"help.h"
+	"invert.h"
+	"write.h"
+
+1552062554 source:/home/bijan/hello-world/project1/write.c
+	"write.h"
+	"memtest.h"
+
+1552062554 source:/home/bijan/hello-world/project1/invert.c
+	"memtest.h"
+	"invert.h"
+
+1551115822 /home/bijan/hello-world/project1/allocate.h
+
+1551115822 /home/bijan/hello-world/project1/display.h
+
+1551290911 /home/bijan/hello-world/project1/free.h
+
+1551115822 /home/bijan/hello-world/project1/help.h
+
+1551115822 /home/bijan/hello-world/project1/invert.h
+
+1551115822 /home/bijan/hello-world/project1/write.h
+
+1552062554 source:/home/bijan/hello-world/project1/pattern.c
+	"memtest.h"
+	"pattern.h"
+
+1551246137 /home/bijan/hello-world/project1/pattern.h
+	<math.h>
+
+1551504008 /home/bijan/hello-world/project1/validate.h
+
+1551504008 source:/home/bijan/hello-world/project1/validate.c
+	"memtest.h"
+	"validate.h"
+
+1551883252 /home/bijan/hello-world/project1/verify.h
+
+1552062554 source:/home/bijan/hello-world/project1/verify.c
+	"memtest.h"
+	"verify.h"
+

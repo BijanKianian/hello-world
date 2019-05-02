@@ -19,9 +19,10 @@
 *
 */
 
+#include <stdint.h>
 /* Prototype list */
 
-void verify(int*, int, int, unsigned int);
+void verify(int32_t*, int32_t, int32_t, int32_t);
 
 /* End prototype list */
 

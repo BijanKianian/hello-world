@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="PES_memtest_FP" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/PES_memtest_FP" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/PES_memtest_FP" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="../../project1/FRDM_functionPointer/allocate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/allocate.h">
+			<Option compile="1" />
+			<Option link="1" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/display.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/display.h">
+			<Option compile="1" />
+			<Option link="1" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/free.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/free.h">
+			<Option compile="1" />
+			<Option link="1" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/help.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/help.h">
+			<Option compile="1" />
+			<Option link="1" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/invert.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/invert.h">
+			<Option compile="1" />
+			<Option link="1" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/memtest.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/memtest.h">
+			<Option compile="1" />
+			<Option link="1" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/pattern.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/pattern.h">
+			<Option compile="1" />
+			<Option link="1" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/test.txt" />
+		<Unit filename="../../project1/FRDM_functionPointer/verify.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/verify.h">
+			<Option compile="1" />
+			<Option link="1" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/write.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../project1/FRDM_functionPointer/write.h">
+			<Option compile="1" />
+			<Option link="1" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

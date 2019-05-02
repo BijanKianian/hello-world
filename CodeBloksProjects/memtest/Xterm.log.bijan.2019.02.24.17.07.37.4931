@@ -1,0 +1,31 @@
+allocate 5
+
+Memory block allocated.
+Address: 0x55a848665a80    size: 5   (20 Bytes)
+Enter another command: 
+display         wr  invert 0 5
+	###########################
+	#      Current values      # 
+	###########################
+
+   Address                     Value 
+  ------------               ----------
+ 0x55a848665a80              0x00000000
+ 0x55a848665a84              0x00000000
+ 0x55a848665a88              0x00000000
+ 0x55a848665a8c              0x00000000
+ 0x55a848665a90              0x00000000
+
+	###########################
+	#     inverted values     #
+	###########################
+
+   Address                     Value 
+  ------------               ----------
+ 0x55a848665a80              0xffffffff
+ 0x55a848665a84              0xffffffff
+ 0x55a848665a88              0xffffffff
+ 0x55a848665a8c              0xffffffff
+ 0x55a848665a90              0xffffffff
+Total inversion time spent(ms): -0.025000
+

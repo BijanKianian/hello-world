@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1554474380 source:/home/bijan/hello-world/CodeBloksProjects/asciitest/main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdint.h>
+

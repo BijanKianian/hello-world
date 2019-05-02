@@ -1,0 +1,119 @@
+/*========================================================================
+** ring.c
+** Circular buffer functions: init(), insert(), read(), entries();
+** ECEN5813
+**========================================================================*/
+#include "ring.h"
+/**######################################### init() - Start ###################################*/
+
+ring_t *init( uint32_t length )
+{
+	char *array =NULL;
+	array = malloc(sizeof(char));
+	if ((length == 0)||( Power_Of_Two (length) == 1))
+		return NULL;
+
+    ring_t RingBuffer;
+    ring_t *p_ring;
+    p_ring = &RingBuffer;
+	p_ring->Length = length; 	       // initialize the length of the buffer.
+	p_ring->Buffer = array;
+	p_ring->Ini = 0;                    // head = 0.
+	p_ring->Outi = 0;                   // tail = 0.
+
+	return p_ring;			// returns the pointer which is pointing to the buffer (a.k.a ring).
+}
+
+/**######################################### init() - End ######################################*/
+
+/****************************************** insert() -Start *****************************************/
+
+int8_t insert( ring_t *ring, char data )
+{
+	if (ring == NULL)
+		return -1;
+
+		/* *******************************************************************************************************************
+		 * The head index which is [ring->Ini & (ring->Length-1)] will remain always between				*
+		 * 0 and [Length - 1]. If it passes or equals the tail index (Outi) while the head pointer is			*
+	     *  euqual or above 'Length',	it means that the pointer has traveled a full circle which implies	*
+		 * "Buffer Full". The full length travel by head or tail can be detected by  examining ring->Ini
+		 * or ring-> Outi depending on which function we are operating.
+		 *********************************************************************************************************************/
+	if(((ring->Ini & (ring->Length-1)) == ring->Outi) && (ring->Ini >= ring->Length))		//BUFFER FULL
+	{
+		return -2;	// Buffer Full
+	}
+
+	ring->Buffer[ring->Ini & (ring->Length-1)] = data;
+	ring->Ini = ring->Ini + 1;
+
+	return 0;
+}
+
+/*************************************************************** insert()- End ******************************************************/
+
+/**--------------------------------------------------------------------- read() -Start -----------------------------------------------------------**/
+
+int8_t read( ring_t *ring, char* data )
+{
+	if (ring == NULL)
+		return -1;
+
+	if(((ring->Outi & (ring->Length-1)) >= ring->Ini) && (ring->Outi >= ring->Length))		// Buffer is empty
+		return -2;
+
+	*data = ring->Buffer[ring->Outi & (ring->Length-1)];
+	ring->Outi = ring->Outi+1;
+
+	return 0;
+}
+
+
+/**-------------------------------------------------------------------- read() - End -----------------------------------------------------------------**/
+
+/**######################################## entries () - Start ####################################**/
+int32_t entries( ring_t *ring )
+{
+	if (ring == NULL)
+		return -1;
+
+	uint32_t Elements, ini, outi, length;
+
+	ini = ring->Ini;
+	outi = ring->Outi;
+	length = ring->Length;
+
+	if(ini >= length)
+		Elements = length;
+	if(ini >= outi)
+		Elements = ini - outi;
+	else
+		Elements = length - outi + ini;	/** If Head is larger or equal to Tail, the
+															 ** number of elements are Head - Tail, otherwise
+															 ** it's the buffer size minus Tail plus Head **/
+
+	return Elements;
+}
+/**######################################## entries() - End #######################################**/
+
+/*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Power_Of_Two() - Start $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$*/
+
+/******************************************************************
+  This is a check for 'length' value given by user,		   *
+  making sure it's a power of 2.									   *
+*******************************************************************/
+
+uint8_t Power_Of_Two (uint32_t num)
+{
+	while (num !=1)
+	{
+		if(num%2 != 0)
+			return 1;
+
+		num = num / 2;
+	}
+	return 0;
+}
+
+/*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Power_Of_Two() - End  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$*/

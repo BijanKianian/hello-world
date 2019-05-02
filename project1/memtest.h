@@ -14,15 +14,14 @@
 * response via functions
 *
 * @author Ismail Yesildirek & Bijan Kianian
-* @date February 24 2019
-* @version 1.3
+* @date March 10 2019
+* @version 1.4
 *
 */
-
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
 #include "allocate.h"
 #include "display.h"
 #include "free.h"
@@ -32,17 +31,42 @@
 #include "pattern.h"
 #include "verify.h"
 
+#define FRDM 0
+
+#if FRDM          /* Substitutions for platform */
+
+#include "board.h"
+#include "peripherals.h"
+#include "pin_mux.h"
+#include "clock_config.h"
+#include "MKL25Z4.h"
+#include "fsl_debug_console.h"
+#include "core_cm0plus.h"
+
+
+#define LSB_WORD int32_t	/* Lower 32 bits of address are used to make immediate*/
+							/*  addressing offset (a.k.a Block_Address_lo), passed to addressCheck(char*, int) */
+#define ADDRESS_LENGTH 8	/* Parameter for address length (PC = 12, FRDM = 8)*/
+#define SYSTICK_MAX 16000000		/* Maximum value for 24 bit Systick register*/
+
+#else
+
+#include <time.h>
+#define LSB_WORD int64_t	/* int64_t is casting Block_Address*/
+#define ADDRESS_LENGTH 12	/* 12 byte addressing for PC */
+
+#endif
+
 /* Prototype list */
 
-int inputCheck(void);
-void pattern_Time(int ,int ,int );
-int addressCheck(char*, int);
-int valueCheck(char*);
-int offsetCheck(char*);
-int lengthCheck(char*, int);
-int alloc_test(char*, char*, char*);
-void invert_Time(int, int);
-int seedCheck(char*);
-
+int32_t inputCheck(void);
+void pattern_Time(int32_t ,int32_t ,int32_t );
+int32_t addressCheck(char*, int32_t);
+int32_t valueCheck(char*);
+int32_t offsetCheck(char*);
+int32_t lengthCheck(char*, int32_t);
+int32_t alloc_test(char*, char*, char*, char*, char*);
+void invert_Time(int32_t, int32_t);
+int32_t seedCheck(char*);
 
 /* End prototype list */

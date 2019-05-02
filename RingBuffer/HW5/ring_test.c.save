@@ -1,0 +1,175 @@
+/*========================================================================
+** ring_test.c
+** Circular buffer testing program: init(), insert(), read(), entries();
+** ECEN5813
+**========================================================================*/
+#include "ring.h"
+/*========================================================================*/
+
+ring_t RingBuffer;               //Global declaration of a buffer and it's pointer called RingBuffer/p_Ring respectively.
+ring_t *p_Ring =&RingBuffer;
+char *array =NULL;
+
+//(((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((( init_suite_1() - Start )))))))))))))))))))))))))))))))))))))))))))))))))
+
+int init_suite_1(void)
+ {
+
+		printf("Please enter a string to be written into the ring buffer:  ");
+		//FLUSH
+		scanf("%[^\n]", data_in);
+
+		printf("You entered: %s\n\n", data_in);
+		do			// Loop for chacking power of two input for length of buffer
+			{
+				printf("Please enter the size of the ring buffer < in powers of 2 >: ");
+				FLUSH
+				scanf("%d", &length);
+
+				if( Power_Of_Two (length) == 1)
+					printf(" Length is not a power of 2 number, please try again!\n");
+
+			} while(Power_Of_Two(length));
+
+		printf("Please enter the number of data characters to be removed from Buffer: ");
+	    FLUSH
+		scanf("%d", &read_out);
+
+		//p_Ring = init(length);			// Initializing buffer with values entered by user and/or program
+	array = malloc(sizeof(char));
+	p_Ring->Length = length; 	       // initialize p_Ring. It is declared in ring.h
+	p_Ring->Buffer = array;
+	p_Ring->Ini = 0;                      // head = 0.
+	p_Ring->Outi = 0;                   // tail = 0.
+
+	return 0;
+  }
+//(((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((( init_suite_1() - End )))))))))))))))))))))))))))))))))))))))))))))))))
+
+//################################## clean_suite_1() - Start #################################
+
+int clean_suite_1(void)
+
+{
+	free(array);		// array is globally declared in header and initialized in init(); array = malloc(sizeof(char));
+	return 0;
+}
+
+//################################## clean_suite_1() - End #################################
+
+//{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{ test_init_1() - Start }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+
+void test_init_1(void)		// initializing test; init()
+{
+
+
+	// CU_ASSERT(NULL == init(0));			// return NULL if length is zero, or not power of two
+	// CU_ASSERT(NULL == init(9));
+	CU_ASSERT(NULL != init(length));
+}
+
+//{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{ test_init_1() - End }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+
+// %%%%%%%%%%%%%%%%%%%%% test_insert_1() - Start %%%%%%%%%%%%%%%%%%%%
+
+void test_insert_1(void)		// Insert test insert()
+{
+
+	// p_Ring = init(length);
+	// CU_ASSERT(-1==insert(NULL, ' ' ));
+	// CU_ASSERT(-1==insert(NULL, 'A'));
+
+	uint32_t k = strlen(data_in)-1;
+	for(uint8_t i = 0; i <= k ; i++)
+	{
+		
+		CU_ASSERT(0==insert(p_Ring, data_in[i]));
+		if (-2==insert(p_Ring, data_in[i]))
+		{
+			printf("Buffer over flow at location %d\n", p_Ring->Ini);
+			break;
+		}
+	}
+	CU_ASSERT( 0 == strncmp( RingBuffer.Buffer , data_in, strlen(RingBuffer.Buffer )));		// This line checks if the buffer space is loaded with-
+																																							//-	correct number of characters from data_in
+}
+// %%%%%%%%%%%%%%%%%%%%% test_insert_1() - End %%%%%%%%%%%%%%%%%%%%
+
+
+/*************************************************** test_read_1() - Start ************************************************************/
+
+void test_read_1(void)
+{
+
+	printf("Current Buffer contents = %s...", RingBuffer.Buffer );
+
+	CU_ASSERT(-1 == read(NULL, data_out));
+
+	if (read_out != 0 )
+	{
+		for (int i = 0; i<=read_out-1; i++)
+			CU_ASSERT(0 == read(p_Ring, data_out+i));			// reading characters from stream and put them into data_out[length]
+	}
+	printf(" Data out = %s...", data_out);
+}
+/***************************************************************** test_read_1() - End ************************************************/
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ test_entries_1() - Start ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+void test_entries_1(void)																//entries test; entries()
+{
+	CU_ASSERT(-1 == entries(NULL));
+	CU_ASSERT(-1 != entries(p_Ring));
+}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ test_entries_1() - End ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+// ########################################### main() - Start #######################################
+
+int main (void)
+{
+	char cnt = 'c';
+
+	while(cnt == 'c')
+	{
+		CU_pSuite pSuite1 = NULL;
+
+		// Initialize CUnit test registry
+
+		if (CUE_SUCCESS != CU_initialize_registry())
+			return CU_get_error();
+
+		// Add suite1 to registry
+
+		pSuite1 = CU_add_suite("Basic_Test_Suite1\n", init_suite_1, clean_suite_1);
+		if (NULL == pSuite1)
+		{
+			CU_cleanup_registry();
+			return CU_get_error();
+		}
+
+		 // add test1 to suite1
+
+		if (((NULL == CU_add_test(pSuite1,  " Testing init() function: ", test_init_1))) ||
+			  (NULL == CU_add_test(pSuite1,  " Testing insert() function: ", test_insert_1)) ||
+			  (NULL == CU_add_test(pSuite1,  " Testing read() function: ", test_read_1)) ||
+			  (NULL == CU_add_test(pSuite1,  " Testing entries() function: ", test_entries_1)))
+
+		{
+			CU_cleanup_registry();
+			return CU_get_error();
+		}
+
+		CU_basic_set_mode(CU_BRM_VERBOSE);
+		CU_basic_run_tests();									// OUTPUT to the screen
+		printf("Please enter (c) for continue, (q) for exit ");
+		FLUSH
+		scanf("%c", &cnt);
+		scanf("%c", &temp);
+	}
+	CU_cleanup_registry();								// Cleaning the Registry
+	return CU_get_error();
+}
+
+//########################################## main() - End #######################################

@@ -1,0 +1,302 @@
+/*========================================================================
+** ring_buffer.c
+** Circular buffer code
+** ECEN5813
+**=======================================================================*/
+
+#include "ring_buffer.h"
+
+/***************************************** main() - Start ************************************/
+int main()
+{
+    char First_Data_In[100];				// Place holder for the first string data by user. (for insert() operation)
+	char Second_Data_In[100];			    // Place holder for the second string data by user. (for insert() operation)
+	char data_out[100];						// Place holder for out string from buffer. (for remov() operation)
+	uint32_t length, read_out;				// length of ring buffer and number of characters to ne removed defined by user.
+	char temp;								// Used in flushing keyboard.
+
+	/*******************************************************
+	**		Asking user for buffer size and data	**
+	********************************************************/
+
+	printf("Please enter a string to be written into the ring buffer:  ");
+	scanf("%[^\n]", First_Data_In);
+
+    printf("You entered: %s\n\n", First_Data_In);
+
+	do			// Loop for chacking power of two input for length of buffer
+	{
+		printf("Please enter the size of the ring buffer < in powers of 2 >: ");
+		FLUSH
+		scanf("%d", &length);
+
+		if( Power_Of_Two (length) == 1)
+			printf(" Length is not a power of 2 number, please try again!\n");
+	}while(Power_Of_Two(length));
+
+	printf("Please enter the number of data characters to be removed from Buffer: ");
+	scanf("%d", &read_out);
+
+	printf("Please enter the second string of data to be written: ");
+	FLUSH
+	scanf("%[^\n]", Second_Data_In);
+
+	printf("You entered: %s\n\n", Second_Data_In);
+
+	/*********************************
+	   Testing insert() and read()
+	 *********************************/
+
+	ring_t *sample = init(length);     									// Initialize RingBuffer and return a pointer (sample) pointing to RingBuffer.
+	uint32_t count_1 = strlen(First_Data_In);
+	uint32_t count_2 = strlen(Second_Data_In);
+
+	insert_test(sample, count_1, First_Data_In);	          		    // pushing characters from input string First_Data_In[100], to the buffer.
+	printf("Current Buffer contents: %s\n", RingBuffer.Buffer);			// Display the result on buffer contents.
+	printf("Tail: %-5d	Head: %-5d	Entries: %-d\n\n", RingBuffer.Outi & (RingBuffer.Length-1), RingBuffer.Ini & (RingBuffer.Length-1), entries( sample));
+
+	read_test(sample, read_out, data_out);
+	printf("*** Data-out Buffer contents ***:%s\n", data_out);
+	printf("Current Buffer contents: %s\n", RingBuffer.Buffer);
+    printf("Tail: %-5d	Head: %-5d	Entries: %-d\n\n", RingBuffer.Outi & (RingBuffer.Length-1), RingBuffer.Ini & (RingBuffer.Length-1), entries( sample));
+
+	insert_test(sample, count_2, Second_Data_In);						// Testing insert after reading data from buffer.
+	printf("Current Buffer contents: %s\n", RingBuffer.Buffer);
+	printf("Tail: %-5d	Head: %-5d	Entries: %-d\n\n", RingBuffer.Outi & (RingBuffer.Length-1), RingBuffer.Ini & (RingBuffer.Length-1), entries( sample));
+
+	free(RingBuffer.Buffer);
+	return 0;
+}
+/******************************************* main() - End **************************************/
+
+/**####################################### init() - Start ####################################**/
+
+ring_t *init ( uint32_t length )
+{
+
+	if (length == 0)
+	{
+		printf("ERROR!... Buffer length cannot be 0.");
+		return NULL;
+	}
+	char *array =NULL;
+	array = malloc(length * sizeof(char));		//array is the actual 'ring buffer' with the size 'length' provided by client
+	ring_t *p_Ring;
+    p_Ring = &RingBuffer;
+	p_Ring->Length = length; 	   				// initialize the length of the buffer.
+	p_Ring->Buffer = array;
+	p_Ring->Ini = 0;                    		// head = 0.
+	p_Ring->Outi = 0;                  			// tail = 0.
+	Buffer_Full = 0;							// buffer is empty now
+	return p_Ring;								// returns the pointer which is pointing to the buffer.
+}
+
+/**######################################### init() - End ######################################*/
+
+/***************************************** insert() -Start **************************************/
+
+int8_t insert ( ring_t *ring, char data )
+{
+
+	uint32_t Head = ring->Ini;
+	uint32_t Tail = ring->Outi;
+	uint32_t length = ring->Length-1;
+	int8_t value = 0;
+
+	if (ring == NULL)
+		value = -1;
+
+		/* *******************************************************************************************************************
+		   The head and tail pointers will remain always between 0 and [Length - 1]. If it equals to tail
+			while the Buffer_Full flag is set, it means the buffer is full. The head will advance only
+			when Buffer is not full.
+		 *********************************************************************************************************************/
+	else if (Buffer_Full == 0)
+	{
+		ring->Buffer[Head] = data;
+		Head = (Head + 1) & length;
+		Buffer_Empty = 0;						// As soon as an insert event, the Buffer_Empty flag shall reset.
+
+		if(Head == Tail)
+			Buffer_Full = 1;
+
+		ring->Ini = Head &length;
+	}
+
+	else if ((Head == Tail ) && (Buffer_Full == 1))	// Buffer is full
+		value = -2;
+	else
+		value = 0;
+
+	return value;
+}
+
+/*************************************************************** insert()- End ******************************************************/
+
+/**------------------------------------------------------------- read() -Start ----------------------------------------------------**/
+
+		/* ***********************************************************************************************************************
+		  Similarly, If tail equals to head while the Buffer_Empty flag is set, it means the buffer is empty.
+		  The tail will advance only when Buffer is not empty.
+		 *************************************************************************************************************************/
+
+
+int8_t read ( ring_t *ring, char* data )
+{
+	uint32_t Head = ring->Ini;
+	uint32_t Tail = ring->Outi;
+	uint32_t length = ring->Length-1;
+	int8_t value = 0;
+
+	if (ring == NULL)
+		value = -1;
+
+	else if (Buffer_Empty == 0)
+	{
+		*data = '0';
+		*data = ring->Buffer[Tail];
+		*data = '0';
+		*data = ring->Buffer[Tail];
+
+	    Tail = (Tail+1) & length;
+		Buffer_Full = 0;					// As soon as a read event, the Buffer_Full flag shall reset.
+
+		if(Head == Tail)
+			Buffer_Empty = 1;
+
+	ring->Outi = Tail & length;
+	value = 0;
+	}
+
+	else if ((Tail == Head) && (Buffer_Empty == 1))			// Buffer is empty
+		value =  -2;
+
+	else
+		value =  0;
+
+	return value;
+}
+
+
+/**-------------------------------------------------------------------- read() - End -----------------------------------------------------------------**/
+
+/**######################################## entries () - Start ####################################**/
+int32_t entries ( ring_t *ring )
+{
+	uint32_t size, Head, Tail, length;
+
+	Head = ring->Ini & (ring->Length-1);
+	Tail = ring->Outi & (ring->Length-1);
+	length = ring->Length;
+
+	size = length;							// When it's full, the size = length
+
+	if(Buffer_Full == 0)
+	{
+		if	(Head >= Tail)
+			size = Head - Tail;
+		else
+			size = length - Tail + Head;
+	}
+
+	return size;
+}
+/**######################################## entries() - End #######################################**/
+
+/**$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Power_Of_Two() $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$**/
+
+/******************************************************************
+  This function is a check for 'length' value given by user,
+*******************************************************************/
+
+uint8_t Power_Of_Two (uint32_t num)
+{
+	while (num !=1)
+	{
+		if(num%2 != 0)
+			return 1;
+
+		num = num / 2;
+	}
+	return 0;
+}
+
+/**======================================= insert_test() - Start ====================================**/
+
+/************************************************************************
+  This function is for testing insert().
+  If the buffer is full or not initialized, it will alert the user
+*************************************************************************/
+
+
+void insert_test (ring_t *ring, uint32_t count, char* data)
+{
+
+	for (uint32_t i = 0; i <= count-1; i++)
+	{
+		int8_t check_insert = insert(ring, data[i]);
+		switch (check_insert)
+		{
+			case 0:
+				printf("Data= %c inserted at location %d\n", data[i], ((ring->Ini-1) & (ring->Length-1)));
+				break;
+
+			case -1:
+				{
+					printf("ERROR!... Buffer is not initialized!\n");
+					i = count;
+					break;
+				}
+
+			case -2:
+				{
+					printf("Buffer is full!\n");
+					i = count;
+					break;
+				}
+		}
+	}
+}
+
+/**======================================= insert_test() - End ====================================**/
+
+/**======================================= read_test() - Start ====================================**/
+
+/************************************************************************
+  This function is for testing read().
+  If the buffer is empty or not initialized, it will alert the user
+*************************************************************************/
+
+
+void read_test (ring_t *ring, uint32_t count, char* data)
+{
+
+	for (uint32_t i = 0; i <= count-1; i++)
+	{
+		int8_t check_read = read(ring, data+i);
+		switch (check_read)
+		{
+			case 0:
+				printf("Data= %c removed from location %d\n", data[i], ((ring->Outi-1) & (ring->Length-1)));
+				break;
+
+			case -1:
+				{
+					printf("ERROR!... Buffer is not initialized!\n");
+					i = count;
+					break;
+				}
+
+			case -2:
+				{
+					printf("Buffer is empty!\n");
+					i = count;
+					break;
+				}
+		}
+	}
+}
+
+/**======================================= read_test() - End ====================================**/
+
+

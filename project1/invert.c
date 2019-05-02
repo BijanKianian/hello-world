@@ -23,7 +23,7 @@
 #include "memtest.h"
 #include "invert.h"
 
-void invert(int* address, int offset)
+void invert(int32_t* address, int32_t offset)
 {
 	if(address ==NULL)
 	{
@@ -32,20 +32,19 @@ void invert(int* address, int offset)
 	}
 	else
 	{
-	int temp = *(address + offset);
+	int32_t temp = *(address + offset);
 	//printf(" Current Value: %x written at address: %p\n\n", *(address + offset), address + offset);
-	int bitPosition;
-    for (int i = 0; i < 32; i++)
+	int32_t bitPosition;
+    for (int16_t i = 0; i < 32; i++)
 	{
 		bitPosition = 1<<i;
 		temp = (temp ^ bitPosition);
 	}
 
-	int value = temp;
+	int32_t value = temp;
 
 	/*write to memory section*/
 	*(address + offset) = value;
-	//printf("\n");
 	}
 	return;
 }

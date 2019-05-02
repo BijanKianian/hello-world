@@ -1,0 +1,22 @@
+# depslib dependency file v1.0
+1553281352 source:/home/bijan/hello-world/RingBuffer/HW5/ring.c
+	"ring.h"
+
+1553281352 /home/bijan/hello-world/RingBuffer/HW5/ring.h
+	"CUnit/CUnit.h"
+	"CUnit/Basic.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdint.h>
+
+1553058248 source:/home/bijan/hello-world/RingBuffer/HW5/ring.h
+	"CUnit/CUnit.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdint.h>
+
+1553281643 source:/home/bijan/hello-world/RingBuffer/HW5/ring_test.c
+	"ring.h"
+

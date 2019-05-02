@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1554582755 source:/home/bijan/hello-world/project2/CU_ring_test/Auto_Test.c
+	"ring.h"
+
+1554582187 /home/bijan/hello-world/project2/CU_ring_test/ring.h
+	"CUnit/CUnit.h"
+	"CUnit/Basic.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdint.h>
+
+1554582755 source:/home/bijan/hello-world/project2/CU_ring_test/ring.c
+	"ring.h"
+

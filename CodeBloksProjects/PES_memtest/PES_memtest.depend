@@ -1,0 +1,83 @@
+# depslib dependency file v1.0
+1552261319 source:/home/bijan/hello-world/project1/FRDM/memtest.c
+	"memtest.h"
+
+1552257299 /home/bijan/hello-world/project1/FRDM/memtest.h
+	<stdint.h>
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	"allocate.h"
+	"display.h"
+	"free.h"
+	"help.h"
+	"invert.h"
+	"write.h"
+	"pattern.h"
+	"verify.h"
+	<time.h>
+	"board.h"
+	"peripherals.h"
+	"pin_mux.h"
+	"clock_config.h"
+	"MKL25Z4.h"
+	"fsl_debug_console.h"
+	"core_cm0plus.h"
+	<time.h>
+
+1552255487 /home/bijan/hello-world/project1/FRDM/allocate.h
+	<stdint.h>
+
+1552255838 /home/bijan/hello-world/project1/FRDM/display.h
+	<stdint.h>
+
+1552255850 /home/bijan/hello-world/project1/FRDM/free.h
+	<stdint.h>
+
+1552240248 /home/bijan/hello-world/project1/FRDM/help.h
+
+1552255865 /home/bijan/hello-world/project1/FRDM/invert.h
+	<stdint.h>
+
+1552255901 /home/bijan/hello-world/project1/FRDM/write.h
+	<stdint.h>
+
+1552266140 /home/bijan/hello-world/project1/FRDM/pattern.h
+	<stdint.h>
+	<math.h>
+
+1552246660 /home/bijan/hello-world/project1/FRDM/verify.h
+	<stdint.h>
+
+1552268084 source:/home/bijan/hello-world/project1/FRDM/pattern.c
+	"memtest.h"
+	"pattern.h"
+
+1552240246 source:/home/bijan/hello-world/project1/FRDM/allocate.c
+	"memtest.h"
+	"allocate.h"
+
+1552257299 source:/home/bijan/hello-world/project1/FRDM/display.c
+	"memtest.h"
+	"display.h"
+
+1552240248 source:/home/bijan/hello-world/project1/FRDM/free.c
+	"memtest.h"
+	"free.h"
+
+1552240248 source:/home/bijan/hello-world/project1/FRDM/help.c
+	"memtest.h"
+	"help.h"
+
+1552240250 source:/home/bijan/hello-world/project1/FRDM/invert.c
+	"memtest.h"
+	"invert.h"
+
+1552269706 source:/home/bijan/hello-world/project1/FRDM/verify.c
+	"memtest.h"
+	"verify.h"
+
+1552258196 source:/home/bijan/hello-world/project1/FRDM/write.c
+	"memtest.h"
+	"write.h"
+

@@ -13,17 +13,21 @@
 * @brief This source file contains a c program to manipulate and test memory.
 *
 * @author Ismail Yesildirek & Bijan Kianian
-* @date February 23 2019
-* @version 1.0
+* @date March 10 2019
+* @version 1.1
 *
 */
-
-#include "write.h"
 #include "memtest.h"
-void write(int* address, int offset, int value)
+#include "write.h"
+
+void write(int32_t* address, int32_t offset, int32_t value)
 {
     *(address + offset) = value;
+#if FRDM
+    printf(" Value: %lx written at address: %p\n\n", value, address + offset);
+#else
     printf(" Value: %x written at address: %p\n\n", value, address + offset);
+#endif
     printf("PES_Prj1 >> ");
     return;
 }
