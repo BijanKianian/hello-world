@@ -13,8 +13,8 @@
 * @brief This source file contains a c program to implement a circular ring buffer.
 *
 * @authors: Ismail Yesildirek, Bijan Kianian
-* @date April 6 2019
-* @version 1.4
+* @date April 20 2019
+* @version 1.5
 *
 */
 
@@ -40,10 +40,12 @@ ring_t *init ( uint32_t length)
 	array = (char*)calloc(length , sizeof(char));		//array is the actual 'ring buffer' with the size 'length' provided by client
 	p_Ring = (ring_t*)malloc(sizeof(ring_t));		    //p_Ring is the allocated buffer structure defined by cient.
 
-	p_Ring->Length = length; 	   								// initializing the buffer.
+	p_Ring->Length = length; 	   						// initializing the buffer.
 	p_Ring->Buffer = array;
 	p_Ring->Ini = 0;
 	p_Ring->Outi = 0;
+	p_Ring->Buffer_Full = 0;
+	p_Ring->Buffer_Empty = 1;
 
 	return p_Ring;													// returns the pointer which is pointing to the buffer.
 }
@@ -71,19 +73,20 @@ int8_t insert ( ring_t *ring, char data )
 			The Buffer_Full and Buffer_Empty flags help to indicate the status along with Head/Tail position.
 			Once Head = Tail, depending which flag is set, it indicates the boundry violation, hence no waste of buffer space.
 		 *********************************************************************************************************************/
-	if (Buffer_Full == 0)
+
+	if (ring->Buffer_Full == 0)
 	{
 		ring->Buffer[Head] = data;
 		Head = (Head + 1) & length;
-		Buffer_Empty = 0;							// As soon as an insert event, the Buffer_Empty flag shall reset.
+		ring->Buffer_Empty = 0;							// As soon as an insert event, the Buffer_Empty flag shall reset.
 
 		if(Head == Tail)
-			Buffer_Full = 1;
+			ring->Buffer_Full = 1;
 
 		ring->Ini = Head &length;
 	}
 
-	else if ((Head == Tail ) && (Buffer_Full == 1))	// Buffer is full
+	else if ((Head == Tail ) && (ring->Buffer_Full == 1))	// Buffer is full
 		value = -2;
 	else
 		value = 0;
@@ -109,20 +112,20 @@ int8_t read ( ring_t *ring, char* data )
 	uint32_t Tail = ring->Outi;
 	uint32_t length = ring->Length-1;
 
-	if (Buffer_Empty == 0)
+	if (ring->Buffer_Empty == 0)
 	{
 		*data = ring->Buffer[Tail];
 	   	Tail = (Tail+1) & length;
-		Buffer_Full = 0;					// As soon as a read event, the Buffer_Full flag shall reset.
+		ring->Buffer_Full = 0;					// As soon as a read event, the Buffer_Full flag shall reset.
 
 		if(Head == Tail)
-			Buffer_Empty = 1;
+			ring->Buffer_Empty = 1;
 
 	ring->Outi = Tail & length;
 	value = 0;
 	}
 
-	else if ((Tail == Head) && (Buffer_Empty == 1))			// Buffer is empty
+	else if ((Tail == Head) && (ring->Buffer_Empty == 1))			// Buffer is empty
 		value =  -2;
 
 	else
@@ -149,7 +152,7 @@ int32_t entries ( ring_t *ring )
 
 	size = length;							// When it's full, the size = length
 
-	if(Buffer_Full == 0)
+	if(ring->Buffer_Full == 0)
 	{
 		if	(Head >= Tail)
 			size = Head - Tail;
@@ -190,7 +193,7 @@ uint32_t sizeValidation (void)
 	uint32_t size;
 	char temp;							      // Used in FLUSH
 
-	do							  /* Loop for chacking power of two input for length of buffer */
+	do							  /* Loop for checking power of two input for length of buffer */
 			{
 				printf("Please enter the size of the buffer ( in powers of 2 ): ");
 				FLUSH
@@ -199,7 +202,7 @@ uint32_t sizeValidation (void)
 				while((size <= 1)||(validNumber != 1))
 				{
 					printf("\nInvalid input! ");
-					printf("Size must be a number greather than '1', try another number: ");
+					printf("Size must be a number greater than '1', try another number: ");
 					FLUSH
 					validNumber = scanf("%d", &size);
 				}

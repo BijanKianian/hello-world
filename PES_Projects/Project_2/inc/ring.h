@@ -13,12 +13,12 @@
 * @brief This header file provides the ring buffer prototypes, and buffer structure.
 *
 * @authors: Ismail Yesildirek & Bijan Kianian
-* @date April 6 2019
-* @version 1.4
+* @date April 20 2019
+* @version 1.5
 *
 */
 
-#define FRDM 0
+#define FRDM 1
 #ifndef RING_H
 #define RING_H
 
@@ -36,20 +36,22 @@
 #include <math.h>
 
 #define FLUSH 	fflush(stdin); scanf("%c", &temp);		// Flushing key board buffer
-#define MAX_LENGTH 1024
-#define LOOP_COUNT 5
-uint8_t Buffer_Full , Buffer_Empty ;	// A flag to indicate the buffer state.
+#define MAX_LENGTH 256
+#define LOOP_COUNT 5									// Auto-test cycles
 
 typedef char uint_8;
 
 typedef struct
 {
+
 	char *Buffer;
 	uint32_t Length;
 	uint32_t Ini;
 	uint32_t Outi;
-} ring_t;
+	uint8_t  Buffer_Full;
+	uint8_t  Buffer_Empty;
 
+} ring_t;
 
 //}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}} Functions Prototype - Start {{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
 

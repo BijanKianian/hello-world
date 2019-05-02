@@ -13,13 +13,15 @@
 * @brief This header file provides the uart prototypes and include files.
 *
 * @authors: Ismail Yesildirek & Bijan Kianian
-* @date April 10 2019
+* @date April 21 2019
 * @version 1.1
 *
 */
 
-#define FRDM 0
-#if FRDM
+/*========================================================================*/
+#define BLOCKING 1
+/*========================================================================*/
+
 #include <stdio.h>
 #include "board.h"
 #include "peripherals.h"
@@ -27,37 +29,24 @@
 #include "clock_config.h"
 #include "MKL25Z4.h"
 #include "fsl_debug_console.h"
-
-/*Global variable to store input*/
-uint8_t isr_rx = 0;
-
-/*Global blocking variable to store input*/
-uint8_t new_rx = 0;
+#include "ring.h"
 
 //}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}} Functions Prototype - Start {{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
 
-void uart_config(void);
-//check for transmit (tx)
-void tx_Status(void);
-
-//transmit char (tx)
-//written char (tx)
-void uart_tx(uint8_t temp);
-
-//check for receive (rx)
-void rx_Status (void);
-
-//receive char (rx)
-uint8_t uart_rx(void);
-
+void uart_config(void);							// UART register/clock configuration
+void tx_Status(void);							// check for transmit (tx)
+void uart_tx(char*);							// transmit char (tx)
+void rx_Status (void);							// check for receive (rx)
+uint8_t uart_rx(void);							// receive char (rx)
 void gpio_config(void);
-
 void led(void);
-
-void delay (uint8_t num);
-
+void delay (uint8_t);
 void print_ASCII (void);
+uint32_t charCounts(char , ring_t*);			// Find frequency of characters in a string
+void report (ring_t*, ring_t*, char*);			// Report on screen
+void echo (char, ring_t*, ring_t*, uint32_t*);	// Echo input character, used in manual mode
+void UART_Read(char*, int32_t, ring_t*);
+void UART_Write(char*, int32_t, ring_t*);
 
 //}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}} Functions Prototype - End {{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
 
-#endif
